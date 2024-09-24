@@ -69,7 +69,6 @@ const Home = () => {
   }
 
   function sortingBoards(value: string) {
-    console.log(value);
     switch (value) {
       case '최신순':
         const newArray = data.map((d) => {
