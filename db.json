@@ -1,0 +1,46 @@
+{
+  "posts": [
+    {
+      "Author": 0,
+      "id": "테스트",
+      "content": "테스트 내용입니다.테스트 내용입니다.테스트 내용입니다.테스트 내용입니다.테스트 내용입니다.테스트 내용입니다.테스트 내용입니다.테스트 내용입니다.테스트 내용입니다.테스트 내용입니다.테스트 내용입니다.테스트 내용입니다.테스트 내용입니다.테스트 내용입니다.v테스트 내용입니다.테스트 내용입니다.테스트 내용입니다.테스트 내용입니다.테스트 내용입니다.테스트 내용입니다.테스트 내용입니다.테스트 내용입니다.테스트 내용입니다.테스트 내용입니다.테스트 내용입니다.테스트 내용입니다.테스트 내용입니다.테스트 내용입니다.테스트 내용입니다.테스트 내용입니다.테스트 내용입니다.테스트 내용입니다.테스트 내용입니다.테스트 내용입니다.테스트 내용입니다.테스트 내용입니다.테스트 내용입니다.테스트 내용입니다.테스트 내용입니다",
+      "image": "http://localhost:3000/src/assets/images/campus.jpg",
+      "date": "2024-09-15 13:14:22"
+    },
+    {
+      "Author": 1,
+      "id": "테스트1",
+      "content": "테스트 내용입니다. 네2",
+      "image": "http://localhost:3000/src/assets/images/campus.jpg",
+      "date": "2024-09-16 01:19:30"
+    },
+    {
+      "Author": 3,
+      "id": "테스트3",
+      "content": "테스트 내용입니다. 네네",
+      "image": "http://localhost:3000/src/assets/images/campus.jpg",
+      "date": "2024-09-20 15:36:21"
+    },
+    {
+      "Author": 0,
+      "id": "테스트",
+      "content": "테스트 내용입니다. 네네",
+      "image": "http://localhost:3000/src/assets/images/campus.jpg",
+      "date": "2024-09-22 18:03:51"
+    },
+    {
+      "Author": 0,
+      "id": "테스트",
+      "content": "테스트 내용입니다. 네네",
+      "image": "http://localhost:3000/src/assets/images/campus.jpg",
+      "date": "2024-09-22 20:03:55"
+    },
+    {
+      "Author": 4,
+      "id": "테스트4",
+      "content": "테스트 내용입니다. 네네",
+      "image": "http://localhost:3000/src/assets/images/campus.jpg",
+      "date": "2024-09-22 20:15:51"
+    }
+  ]
+}

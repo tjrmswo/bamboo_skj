@@ -1,0 +1,22 @@
+@font-face {
+  font-family: 'GmarketSansBold';
+  font-style: normal;
+  src: url('/fonts/GmarketSansTTFBold.ttf');
+}
+@font-face {
+  font-family: 'GmarketSansLight';
+  font-style: normal;
+  src: url('/fonts/GmarketSansTTFLight.ttf');
+}
+@font-face {
+  font-family: 'GmarketSansMedium';
+  font-style: normal;
+  src: url('/fonts/GmarketSansTTFMedium.ttf');
+}
+
+html,
+body {
+  max-width: 100vw;
+  max-height: 100vh;
+  margin: 0;
+}
