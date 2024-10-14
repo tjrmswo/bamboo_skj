@@ -1,6 +1,6 @@
 import { NextApiRequest, NextApiResponse } from 'next';
 import { createConnection } from '../../lib/db';
-import { userType } from '@/types/user';
+import { userType } from '@/types/login';
 import { ResultSetHeader, RowDataPacket } from 'mysql2/promise';
 
 export default async function handler(
@@ -73,7 +73,7 @@ export default async function handler(
         if (result.affectedRows > 0) {
           res.status(200).json({ success: true, message: 'User deleted' });
         } else {
-          res.status(204).end(); // 삭제된 내용이 없을 때
+          res.status(204).end();
         }
       } else {
         res.status(404).json({ success: false, message: 'User not found' });

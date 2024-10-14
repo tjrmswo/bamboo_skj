@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import ReactDOM from 'react-dom';
-import { ModalContainer } from './styles';
+import { ModalContainer } from '../common/styles';
 
 // icons
 import { IoClose } from 'react-icons/io5';
@@ -9,12 +9,12 @@ interface ModalType {
   modal: boolean;
   openModal: () => void;
 }
-const Modal = ({ openModal, children }: ModalType) => {
+const ModalBoard = ({ modal, openModal, children }: ModalType) => {
   const [modalRoot, setModalRoot] = useState<HTMLElement | null>(null);
 
   useEffect(() => {
     const root = document.querySelector(
-      '#modal-container'
+      '#modal-container2'
     ) as HTMLElement | null;
     setModalRoot(root);
   }, []);
@@ -22,12 +22,20 @@ const Modal = ({ openModal, children }: ModalType) => {
   if (!modalRoot) return null;
 
   return ReactDOM.createPortal(
-    <ModalContainer>
+    <ModalContainer modal={modal}>
       <div className="modal" onClick={(e) => e.stopPropagation()}>
         {/* 모달 헤더 */}
         <div className="modalHeader">
-          <div onClick={openModal} className="logo">
-            <IoClose />
+          <div onClick={openModal}>
+            <IoClose
+              style={{
+                marginRight: '0.4rem',
+                width: '20',
+                height: '20',
+                cursor: 'pointer',
+                color: 'white',
+              }}
+            />
           </div>
         </div>
         {/* 모달 컨텐츠 부분 */}
@@ -38,4 +46,4 @@ const Modal = ({ openModal, children }: ModalType) => {
     modalRoot
   );
 };
-export default Modal;
+export default ModalBoard;
