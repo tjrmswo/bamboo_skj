@@ -136,9 +136,30 @@ export const Container = styled.div`
   #file {
     display: none;
   }
+
+  .chatSpinner {
+    position: fixed;
+    bottom: 0.5rem;
+    right: 1rem;
+    cursor: pointer;
+    border-radius: 50%;
+    padding: 5px;
+    color: ${theme.secondary};
+    border: 2px solid ${theme.secondary};
+
+    &:hover {
+      transition: 0.5s transform;
+      transform: scale(1.1);
+    }
+
+    * {
+      width: 36px;
+      height: 36px;
+    }
+  }
 `;
 
-export const HomeHeader = styled.header`
+export const HomeHeader = styled.header<{ dropdownBoolean: boolean }>`
   z-index: 1;
   width: 100%;
   height: 55px;
@@ -155,9 +176,11 @@ export const HomeHeader = styled.header`
   }
 
   .headerContainer {
-    width: 6%;
+    height: 100px;
     display: flex;
     flex-direction: row;
+    position: relative;
+    padding: 5px;
   }
   .search {
     cursor: pointer;
@@ -165,6 +188,21 @@ export const HomeHeader = styled.header`
 
   .user {
     cursor: pointer;
+    box-shadow: ${({ dropdownBoolean }) =>
+      dropdownBoolean === true ? '0px 1px 2px 1px gray' : null};
+    border-radius: 50%;
+  }
+
+  .logoutIcon {
+    cursor: pointer;
+    position: absolute;
+    margin-top: 4rem;
+
+    background-color: white;
+    box-shadow: ${({ dropdownBoolean }) =>
+      dropdownBoolean === true ? '0px 1px 2px 1px gray' : null};
+    border-radius: 50%;
+    padding: 5px;
   }
 `;
 
@@ -172,7 +210,7 @@ export const Nav = styled.nav`
   display: flex;
   align-items: center;
   justify-content: space-around;
-  margin-bottom: 2rem;
+  margin-bottom: 0.5rem;
   margin-top: 1rem;
 
   select {
