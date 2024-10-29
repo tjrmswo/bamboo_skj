@@ -298,13 +298,6 @@ const Home = () => {
     }
   }
 
-  // useEffect(() => {
-  //   socket?.on('message', (message: IMessage) => {
-  //     // console.log(message);
-  //     setMessages((prev) => [...prev, message]);
-  //   });
-  // }, [socket]);
-
   useEffect(() => {
     const token = Cookie.get('token');
     if (!token) {
@@ -318,6 +311,7 @@ const Home = () => {
   }, [boardData, selected]);
 
   return (
+    // <h1>안녕</h1>
     <Container>
       <div id="modal-container"></div>
       <div id="modal-container2"></div>
@@ -367,7 +361,7 @@ const Home = () => {
           getSelectedData={getSelectedData}
           boardDelete={boardDelete}
         />
-        {isOpened === true && (
+        {isOpened && (
           <Modal openModal={openModal} modal={isOpened}>
             <BoardInfo
               selected={selected}
