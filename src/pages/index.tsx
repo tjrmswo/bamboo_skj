@@ -49,16 +49,14 @@ import { navContext } from '@/context/homeContext';
 
 // icons
 import { IoChatbubbleEllipsesOutline } from 'react-icons/io5';
+import useInfiniteScroll from '@/hooks/home/api/useInfiniteScroll';
+import useGetInfiniteScroll from '@/hooks/home/api/useGetInfiniteScroll';
 
 const Home = () => {
   // 라우터
   const router = useRouter();
-
   // 채팅
-  const { socket } = useSocket();
-  const [, setMessages] = useState<IMessage[]>([]);
   const [currentMessage, setCurrentMessage] = useState<string>('');
-
   // 컴포넌트 내에서
   const fileInputRef = useRef<HTMLInputElement | null>(null);
   // 게시글 수정
@@ -89,13 +87,32 @@ const Home = () => {
     createdAt: '',
   });
   const { board_title, board_content, board_img, createdAt } = boardData;
-
   // chat modal boolean
   const [chattingModalBoolean, setChattingModalBoolean] =
     useState<boolean>(false);
-
   // dropdown boolean
   const [dropdownBoolean, setDropdownBoolean] = useState<boolean>(false);
+  // 무한 스크롤 게시글 데이터
+  const [infiniteBoardData, setInfiniteBoardData] = useState<BoardType[]>([
+    {
+      id: 0,
+      board_title: '',
+      board_content: '',
+      board_user_id: '',
+      board_img: '',
+      createdAt: '',
+    },
+  ]);
+  // 바텀 컨테이너 ref
+  const bottomRef = useRef(null);
+  // 무한 페이지 컨트롤
+  const [currentPage, setCurrentPage] = useState<number>(0);
+  // 처음 로딩에 대한 플래그 추가
+  const [isFirstLoad, setIsFirstLoad] = useState(true);
+  // 삭제되는 게시글 아이디
+  const [deleteBoardId, setDeleteBoardId] = useState<number>(0);
+  // 초기화 플래그
+  const [isInitialized, setIsInitialized] = useState<boolean>(false);
 
   // FormData 생성
   const formData = useFormData({
@@ -117,13 +134,49 @@ const Home = () => {
   });
 
   // React Query
-  const { refetch: refetchAllData } = useGetAllData({ setData }); // 모든 데이터 GET
+  const { data: boardAllData, refetch: refetchAllData } = useGetAllData({
+    setData,
+  }); // 모든 데이터 GET
 
   const {
     data: getSpecificData,
     refetch: refetchSpecificData,
     isSuccess: specificDataSuccess,
   } = useGetSpecificBoardData({ selected }); // 특정 데이터 GET
+
+  const {
+    data: scrollData,
+    mutate: getPagingBoard,
+    isSuccess: successScrollData,
+  } = useInfiniteScroll({
+    setInfiniteBoardData,
+    currentPage,
+  }); // 무한 스크롤 데이터 GET
+
+  useEffect(() => {
+    if (successScrollData && isInitialized) {
+      setCurrentPage((prev) => prev + 1);
+      const currentOffset = (currentPage + 1) * 10;
+      localStorage.setItem('limit', `${currentOffset}`);
+    } else {
+      setIsInitialized(true);
+    }
+  }, [successScrollData, isInitialized]);
+
+  // useEffect(() => {
+  //   console.log(1);
+  //   console.log(2);
+  // }, []);
+
+  const { mutate: getPagingBoardDelete } = useGetInfiniteScroll({
+    setInfiniteBoardData,
+    deleteBoardId,
+  });
+
+  useEffect(() => {
+    getPagingBoard();
+    localStorage.setItem('limit', '10');
+  }, []);
 
   const { data: chattingData, refetch: refetchChattingData } =
     useGetChattingData(); // 채팅 GET
@@ -140,12 +193,17 @@ const Home = () => {
     refetchChattingData,
   }); // 채팅 메세지 보내기
 
-  const { mutate: fetchAscendData } = useGetDateAscendData({ setData }); // 오래된 순
+  // 정렬
+  const { mutate: fetchAscendData } = useGetDateAscendData({
+    setInfiniteBoardData,
+  }); // 오래된 순
 
-  const { mutate: fetchDescendData } = useGetDateDescendData({ setData }); // 최신 순
+  const { mutate: fetchDescendData } = useGetDateDescendData({
+    setInfiniteBoardData,
+  }); // 최신 순
 
   const { mutate: fetchContentAscendData } = useGetContentAscendData({
-    setData,
+    setInfiniteBoardData,
   }); // 이름 순
 
   const { mutate: patchBoards } = usePatchBoard({
@@ -154,7 +212,10 @@ const Home = () => {
     refetchAllData,
   }); // 게시글 Patch
 
-  const { mutate: deleteBoards } = useDeleteBoard({ refetchAllData }); // 게시글 Delete
+  const { mutate: deleteBoards } = useDeleteBoard({
+    refetchAllData,
+    getPagingBoardDelete,
+  }); // 게시글 Delete
 
   useEffect(() => {
     if (specificDataSuccess) {
@@ -162,10 +223,30 @@ const Home = () => {
     }
   }, [specificDataSuccess, getSpecificData]);
 
+  // 헤더 드롭다운
   const handleDropdown = () => setDropdownBoolean(!dropdownBoolean);
-
   // 채팅 모달
   const handleChatModal = () => setChattingModalBoolean(!chattingModalBoolean);
+
+  // 게시글 작성 모달 열기
+  function openModalBoard() {
+    setIsBoardOpened(!isBoardOpened);
+  }
+
+  // 게시글 모달 닫기
+  function closeModal() {
+    setIsOpened(false);
+  }
+
+  // 게시글 작성 모달 닫기
+  function closeModalBoard() {
+    setIsBoardOpened(false);
+  }
+
+  // 게시글 작성 모달 닫기
+  function closeModalChat() {
+    setChattingModalBoolean(false);
+  }
 
   // 이미지 수정
   const handleImageClick = () => {
@@ -233,26 +314,6 @@ const Home = () => {
     execute();
   }
 
-  // 게시글 작성 모달 열기
-  function openModalBoard() {
-    setIsBoardOpened(!isBoardOpened);
-  }
-
-  // 게시글 모달 닫기
-  function closeModal() {
-    setIsOpened(false);
-  }
-
-  // 게시글 작성 모달 닫기
-  function closeModalBoard() {
-    setIsBoardOpened(false);
-  }
-
-  // 게시글 작성 모달 닫기
-  function closeModalChat() {
-    setChattingModalBoolean(false);
-  }
-
   // 게시글 post 실행 함수
   function writeBoard() {
     const createdAt = useSetDate();
@@ -260,13 +321,14 @@ const Home = () => {
       ...prev,
       createdAt,
     }));
-    // boardWrite.mutate();
     postBoard();
   }
 
   // 게시글 삭제 함수
   function boardDelete(id: number) {
     deleteBoards(id);
+    //setState 함수
+    setDeleteBoardId(id);
   }
 
   // 오래된 순
@@ -301,17 +363,16 @@ const Home = () => {
   useEffect(() => {
     const token = Cookie.get('accessToken');
     if (!token) {
-      router.replace('/login'); // 일반적으로 router.replace 사용
+      router.replace('/login');
     }
-  }, []); // 종속성 배열을 비워 초기 렌더링에서만 실행
+  }, []);
 
   useEffect(() => {
-    console.log('boardData: ', boardData);
-    console.log('selected: ', selected);
-  }, [boardData, selected]);
+    console.log('infiniteBoardData:', infiniteBoardData);
+    console.log('currentPage:', currentPage);
+  }, [infiniteBoardData, currentPage]);
 
   return (
-    // <h1>안녕</h1>
     <Container>
       <div id="modal-container"></div>
       <div id="modal-container2"></div>
@@ -357,9 +418,10 @@ const Home = () => {
           <NavBar />
         </navContext.Provider>
         <MainContent
-          data={data}
+          data={infiniteBoardData}
           getSelectedData={getSelectedData}
           boardDelete={boardDelete}
+          getPagingBoard={getPagingBoard}
         />
         {isOpened && (
           <Modal openModal={openModal} modal={isOpened}>
@@ -389,6 +451,7 @@ const Home = () => {
           <Chat chattingData={chattingData} />
         </ChatModal>
       )}
+      {/* <div ref={bottomRef} className="bottom" style={{ height: '10px' }}></div> */}
     </Container>
   );
 };
