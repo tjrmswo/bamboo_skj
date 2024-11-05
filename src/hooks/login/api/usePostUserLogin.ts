@@ -43,7 +43,7 @@ const usePostUserLogin = ({
       return response.data;
     },
     onSuccess: (data) => {
-      // console.log(data);
+      console.log(data);
       Cookie.set('accessToken', data.token);
       Cookie.set('user_index', data.data.user_index);
       Cookie.set('user_index', data.data.user_index);
