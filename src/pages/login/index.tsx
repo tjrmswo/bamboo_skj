@@ -96,6 +96,11 @@ const Login = () => {
     findUser();
   }
 
+  useEffect(() => {
+    console.log(process.env.NEXT_PUBLIC_API_ADDRESS);
+    console.log(process.env.NEXT_PUBLIC_REDIREACT_URI);
+  }, []);
+
   return (
     <>
       <div id="toast_message"></div>
