@@ -1,40 +1,56 @@
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+# 🎋대학교 대나무숲
+프로젝트 한줄 설명: 대학교 커뮤니티를 만들어 학생들끼리의 커뮤니케이션을 활성화
 
-## Getting Started
+(이미지)
 
-First, run the development server:
+피피티로 만들기
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+## 💻 UI
+페이지 가져오기
+| 로그인 | 회원가입 |
+| :---: | :----: |
+| ![image](https://github.com/user-attachments/assets/be4607b9-55d1-45bc-8be2-d3cdc36a4ddf) | ![image](https://github.com/user-attachments/assets/e1ef820b-16b7-4d06-950a-0c7452b8c4c7)
+| 게시글-작성 | 게시글-수정 |
+![image](https://github.com/user-attachments/assets/cb6f811f-516f-42a1-a02a-b01d18d6caba) | ![image](https://github.com/user-attachments/assets/ad5b165e-d449-461e-b314-014bb6ed938d)
+| 채팅 |
+![image](https://github.com/user-attachments/assets/4b54bd69-2f80-44c0-87b9-1da35d85e19e)
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## 🛠 주요 기능
+### 게시글 기능  
+- 게시글 생성, 수정, 삭제
 
-You can start editing the page by modifying `pages/index.tsx`. The page auto-updates as you edit the file.
+### 채팅 기능  
+- 실시간 채팅 기능
 
-[API routes](https://nextjs.org/docs/api-routes/introduction) can be accessed on [http://localhost:3000/api/hello](http://localhost:3000/api/hello). This endpoint can be edited in `pages/api/hello.ts`.
+## 🌍 개발 환경
+- node: v20.10.0
+- pnpm: 9.12.3
+- next: 14.2.13
+- typescript: ^5.6.3
+- react: ^18.3.1
+- jest: ^29.7.0
 
-The `pages/api` directory is mapped to `/api/*`. Files in this directory are treated as [API routes](https://nextjs.org/docs/api-routes/introduction) instead of React pages.
+## ⚒ Tech Stack
 
-This project uses [`next/font`](https://nextjs.org/docs/basic-features/font-optimization) to automatically optimize and load Inter, a custom Google Font.
+### Frontend
+| Next.js | Typescript | Styled-components | Recoil | Axios | 
+| :----: | :--------: | :----------------: | :----: | :---: |
+| <img alt="NextJS" src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQwqsJpxyle5L9PwXST_rmofMHmA7HEXA30fw&s" width="65" height="65" /> | <img src="https://techstack-generator.vercel.app/ts-icon.svg" alt="Typecript" width="65" height="65" /> | <img src="https://i.ibb.co/ydkG6cv/img.png" alt="Styled-components" width="65" height="65" />| <img src="https://github.com/user-attachments/assets/1befdeb7-1f1c-4340-8069-a078a648cc65" alt="Recoil" width="100" height="65" /> | <img src="https://user-images.githubusercontent.com/45915619/233941806-5d6d2a03-3b82-4267-8966-2eb8b32c9ba0.png" alt="Axios" width="65" height="65" /> | 
+| React Query | Socket-io | MSW | jest | husky |
+| <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTR6cDwwea5Cf865N8HQYn7J42_QiilcOj9Ug&s" alt="ReactQuery" width="100" height="80" /> |<img src="https://github.com/user-attachments/assets/76848933-729a-42d5-b261-02d8be8637c8" alt="Socket-io" width="60" height="60" /> | <img src="https://images-ext-1.discordapp.net/external/_SNjjSQBJ0oxZ8JnMA96SBWi--B3Y0u2kYakiURqtaI/https/seeklogo.com/images/M/msw-mock-service-worker-logo-88A2A26653-seeklogo.com.png?format=webp&quality=lossless&width=373&height=375" alt="MSW" width="60" height="60" /> | <img src="https://github.com/user-attachments/assets/696f7fd0-1d61-4751-bb2d-c0b0ed28ea23" alt="jest" width="65" height="65" /> | <img src="https://github.com/user-attachments/assets/414f970b-4bca-4c61-9bb3-b879284c725c" alt="husky" width="65" height="65" />
 
-## Learn More
+### Backend
+| JsonWebToken | Next.js Api Route |
+| :------: | :---: |
+| <img src="https://github.com/user-attachments/assets/3287e94f-0acb-4eed-8c4e-d3d304549ae9" alt="MSW" width="60" height="60" /> | <img src="https://github.com/user-attachments/assets/15aeb411-7141-400f-8575-b83d4d79fcb5" alt="Next.jsapi route" width="150" height="80" />
 
-To learn more about Next.js, take a look at the following resources:
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
+### DevOps
+| AWS RDS | Vercel | 
+| :----: | :--------: |
+| <img alt="NextJS" src="https://github.com/user-attachments/assets/ce4bffd7-a290-4b34-b595-2884bfecb19e" width="65" height="65" /> | <img src="https://github.com/user-attachments/assets/472131d0-104e-4ed2-8b80-5382d9efbe64" alt="Vercel" width="65" height="65" /> |
 
-## Deploy on Vercel
+## 💡 System Architecture
+![시스템 아키텍처](https://github.com/user-attachments/assets/a58ccdee-c87f-4d4e-9b61-3575be51e1aa)
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
