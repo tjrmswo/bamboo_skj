@@ -23,6 +23,7 @@ import MainContent from '@/components/home/MainContent';
 import BoardInfo from '@/components/home/BoardInfo';
 import ChatModal from '@/components/home/ChattModal';
 import Chat from '@/components/home/ChatModal/Chat';
+import Friend from '@/components/home/Friend';
 
 // hooks
 import useModalOpen, { useModalOpenType } from '@/hooks/home/useModalOpen';
@@ -41,14 +42,14 @@ import usePostBoardWrite from '@/hooks/home/api/usePostBoardWrite';
 import usePatchBoard from '@/hooks/home/api/usePatchBoard';
 import usePostSendMessage from '@/hooks/home/api/usePostSendMessage';
 import useGetChattingData from '@/hooks/home/api/useGetChattingData';
+import useInfiniteScroll from '@/hooks/home/api/useInfiniteScroll';
+import useGetInfiniteScroll from '@/hooks/home/api/useGetInfiniteScroll';
 
 // context
 import { navContext } from '@/context/homeContext';
 
 // icons
 import { IoChatbubbleEllipsesOutline } from 'react-icons/io5';
-import useInfiniteScroll from '@/hooks/home/api/useInfiniteScroll';
-import useGetInfiniteScroll from '@/hooks/home/api/useGetInfiniteScroll';
 
 const Home = () => {
   // 라우터
@@ -103,12 +104,12 @@ const Home = () => {
   ]);
   // 무한 페이지 컨트롤
   const [currentPage, setCurrentPage] = useState<number>(0);
-  // 처음 로딩에 대한 플래그 추가
-  // const [isFirstLoad, setIsFirstLoad] = useState(true);
   // 삭제되는 게시글 아이디
   const [deleteBoardId, setDeleteBoardId] = useState<number>(0);
   // 초기화 플래그
   const [isInitialized, setIsInitialized] = useState<boolean>(false);
+
+  const [friendRequestModal, setFriendRequestModal] = useState<boolean>(false);
 
   // FormData 생성
   const formData = useFormData({
@@ -155,11 +156,6 @@ const Home = () => {
       setIsInitialized(true);
     }
   }, [successScrollData, isInitialized]);
-
-  // useEffect(() => {
-  //   console.log(1);
-  //   console.log(2);
-  // }, []);
 
   const { mutate: getPagingBoardDelete } = useGetInfiniteScroll({
     setInfiniteBoardData,
@@ -220,6 +216,8 @@ const Home = () => {
   const handleDropdown = () => setDropdownBoolean(!dropdownBoolean);
   // 채팅 모달
   const handleChatModal = () => setChattingModalBoolean(!chattingModalBoolean);
+  // 친구창
+  const handleFriendModal = () => setFriendRequestModal(!friendRequestModal);
 
   // 게시글 작성 모달 열기
   function openModalBoard() {
@@ -239,6 +237,11 @@ const Home = () => {
   // 게시글 작성 모달 닫기
   function closeModalChat() {
     setChattingModalBoolean(false);
+  }
+
+  // 친구창 모달 닫기
+  function closeFriendModal() {
+    setFriendRequestModal(false);
   }
 
   // 이미지 수정
@@ -355,6 +358,26 @@ const Home = () => {
     }
   }
 
+  // 친구 요청
+  // const friend = useMutation({
+  //   mutationKey: ['addFriend'],
+  //   mutationFn: async () => {
+  //     const response = await addFriends({
+  //       userID: 1,
+  //       friendUserID: 2,
+  //       status: false,
+  //     });
+
+  //     console.log(response);
+  //   },
+  //   onError: (err) => {
+  //     console.log(err);
+  //   },
+  // });
+  // useEffect(() => {
+  //   friend.mutate();
+  // }, []);
+
   useEffect(() => {
     const token = Cookie.get('accessToken');
     if (!token) {
@@ -387,10 +410,22 @@ const Home = () => {
           {' '}
         </div>
       )}
+      {friendRequestModal && (
+        <div className="background" onClick={closeFriendModal}>
+          {' '}
+        </div>
+      )}
       <Header
         handleDropdown={handleDropdown}
         dropdownBoolean={dropdownBoolean}
+        handleFriendModal={handleFriendModal}
       />
+      {friendRequestModal && (
+        <Modal openModal={handleFriendModal} modal={friendRequestModal}>
+          <Friend />
+        </Modal>
+      )}
+
       <div
         style={{
           width: '70%',
