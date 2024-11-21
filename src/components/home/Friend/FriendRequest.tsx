@@ -9,7 +9,18 @@ import { FriendRequestContainer } from '@/styles/home/styles';
 // types
 import { userRequestType } from '@/types/home';
 
-const FriendRequest = () => {
+// libraries
+import Cookies from 'js-cookie';
+import { QueryObserverResult, RefetchOptions } from '@tanstack/react-query';
+
+interface FriendRequestType {
+  friendList: userRequestType[] | undefined;
+  requestFriend: (
+    options?: RefetchOptions | undefined
+  ) => Promise<QueryObserverResult<userRequestType[], Error>>;
+}
+
+const FriendRequest = ({ friendList, requestFriend }: FriendRequestType) => {
   // 친구 요청 데이터
   const [requestData, setRequestData] = useState<userRequestType>({
     createAt: '',
@@ -22,7 +33,8 @@ const FriendRequest = () => {
   const { userID, friendUserID, status } = requestData;
 
   // 친구 요청
-  const { data: friendList, refetch: requestFriend } = useGetFriendRequest();
+  // const { data: friendList, refetch: requestFriend } = useGetFriendRequest();
+
   // 친구 수락
   const { mutate: acceptFriend } = usePostFriendAccept({
     requestFriend,
@@ -58,9 +70,12 @@ const FriendRequest = () => {
   }
 
   return (
-    <>
+    <div style={{ height: '70vh' }}>
       {friendList?.map((d, i) => {
-        if (d.status === 0) {
+        if (
+          d.status === 0 &&
+          d.friendUserID === Number(Cookies.get('user_index'))
+        ) {
           return (
             <FriendRequestContainer key={i}>
               <div
@@ -98,7 +113,7 @@ const FriendRequest = () => {
           );
         }
       })}
-    </>
+    </div>
   );
 };
 

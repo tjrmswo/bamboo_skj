@@ -9,6 +9,7 @@ import Cookie from 'js-cookie';
 
 // types
 import { BoardDataType, BoardType } from '@/types/home';
+import { ChatDataType, messageType } from '@/types/chat';
 
 //constants
 import { sortValues } from '@/constants/boardSortingValue';
@@ -50,12 +51,19 @@ import { navContext } from '@/context/homeContext';
 
 // icons
 import { IoChatbubbleEllipsesOutline } from 'react-icons/io5';
+import { useMutation, useQuery } from '@tanstack/react-query';
+import { getMyChat } from './api/clients/home';
 
 const Home = () => {
   // 라우터
   const router = useRouter();
   // 채팅
-  const [currentMessage, setCurrentMessage] = useState<string>('');
+  const [message, setCurrentMessage] = useState<messageType>({
+    currentMessage: '',
+    receiverID: 0,
+  });
+
+  const { currentMessage, receiverID } = message;
   // 컴포넌트 내에서
   const fileInputRef = useRef<HTMLInputElement | null>(null);
   // 게시글 수정
@@ -170,6 +178,22 @@ const Home = () => {
   const { data: chattingData, refetch: refetchChattingData } =
     useGetChattingData(); // 채팅 GET
 
+  const { data: myChat, refetch: getMyIndividualChat } = useQuery<
+    ChatDataType[]
+  >({
+    queryKey: ['getMyIndividualChat'],
+    queryFn: async () => {
+      const chat_user_id = Number(Cookie.get('user_index'));
+      const response = await getMyChat(chat_user_id);
+
+      return response.data;
+    },
+  });
+
+  // useEffect(() => {
+  //   getMyIndividualChat();
+  // }, []);
+
   const { mutate: postBoard } = usePostBoardWrite({
     closeModalBoard,
     refetchAllData,
@@ -178,8 +202,10 @@ const Home = () => {
 
   const { mutate: sendMessages } = usePostSendMessage({
     currentMessage,
+    receiverID,
     setCurrentMessage,
     refetchChattingData,
+    getMyIndividualChat,
   }); // 채팅 메세지 보내기
 
   // 정렬
@@ -358,26 +384,6 @@ const Home = () => {
     }
   }
 
-  // 친구 요청
-  // const friend = useMutation({
-  //   mutationKey: ['addFriend'],
-  //   mutationFn: async () => {
-  //     const response = await addFriends({
-  //       userID: 1,
-  //       friendUserID: 2,
-  //       status: false,
-  //     });
-
-  //     console.log(response);
-  //   },
-  //   onError: (err) => {
-  //     console.log(err);
-  //   },
-  // });
-  // useEffect(() => {
-  //   friend.mutate();
-  // }, []);
-
   useEffect(() => {
     const token = Cookie.get('accessToken');
     if (!token) {
@@ -385,35 +391,27 @@ const Home = () => {
     }
   }, []);
 
-  useEffect(() => {
-    console.log('infiniteBoardData:', infiniteBoardData);
-    console.log('currentPage:', currentPage);
-  }, [infiniteBoardData, currentPage]);
+  // useEffect(() => {
+  //   console.log('infiniteBoardData:', infiniteBoardData);
+  //   console.log('currentPage:', currentPage);
+  // }, [infiniteBoardData, currentPage]);
+
+  const modalStates = [
+    { isOpen: isOpened, close: closeModal },
+    { isOpen: isBoardOpened, close: closeModalBoard },
+    { isOpen: chattingModalBoolean, close: closeModalChat },
+    { isOpen: friendRequestModal, close: closeFriendModal },
+  ];
 
   return (
     <Container>
       <div id="modal-container"></div>
       <div id="modal-container2"></div>
       <div id="modal-chat"></div>
-      {isOpened && (
-        <div className="background" onClick={closeModal}>
-          {' '}
-        </div>
-      )}
-      {isBoardOpened && (
-        <div className="background" onClick={closeModalBoard}>
-          {' '}
-        </div>
-      )}
-      {chattingModalBoolean && (
-        <div className="background" onClick={closeModalChat}>
-          {' '}
-        </div>
-      )}
-      {friendRequestModal && (
-        <div className="background" onClick={closeFriendModal}>
-          {' '}
-        </div>
+      {modalStates.map((modal, index) =>
+        modal.isOpen ? (
+          <div key={index} className="background" onClick={modal.close}></div>
+        ) : null
       )}
       <Header
         handleDropdown={handleDropdown}
@@ -478,10 +476,16 @@ const Home = () => {
           currentMessage={currentMessage}
           setCurrentMessage={setCurrentMessage}
         >
-          <Chat chattingData={chattingData} />
+          <Chat
+            chattingData={chattingData}
+            myChat={myChat}
+            sendMessages={sendMessages}
+            currentMessage={currentMessage}
+            setCurrentMessage={setCurrentMessage}
+            getMyIndividualChat={getMyIndividualChat}
+          />
         </ChatModal>
       )}
-      {/* <div ref={bottomRef} className="bottom" style={{ height: '10px' }}></div> */}
     </Container>
   );
 };

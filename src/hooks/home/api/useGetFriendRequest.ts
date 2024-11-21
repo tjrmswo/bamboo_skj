@@ -8,13 +8,13 @@ const useGetFriendRequest = () => {
     queryKey: ['getMyChat'],
     queryFn: async () => {
       const userID = Number(Cookies.get('user_index'));
-
       const response = await getMyFriendRequest(userID);
 
       // console.log(response);
 
       return response.data;
     },
+    enabled: true,
   });
 };
 

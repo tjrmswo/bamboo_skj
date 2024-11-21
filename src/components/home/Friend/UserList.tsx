@@ -3,68 +3,110 @@ import useGetFriendRequest from '@/hooks/home/api/useGetFriendRequest';
 import usePostFriendAccept from '@/hooks/home/api/usePostFriendAccept';
 import {
   acceptFriend,
+  addFriends,
   getAllUser,
   getMyFriendRequest,
 } from '@/pages/api/clients/home';
 import { FriendRequestContainer } from '@/styles/home/styles';
 import { userEntireType, userRequestType } from '@/types/home';
 // libraries
-import { useMutation, useQuery } from '@tanstack/react-query';
+import {
+  QueryObserverResult,
+  RefetchOptions,
+  useMutation,
+  useQuery,
+  useQueryClient,
+} from '@tanstack/react-query';
 import Cookies from 'js-cookie';
 import { SetStateAction, useEffect } from 'react';
 
 interface UserListType {
-  userID: number;
-  friendUserID: number;
-  status: number;
   setRequestData: React.Dispatch<SetStateAction<userRequestType>>;
   friendList: userRequestType[] | undefined;
+  requestFriend: (
+    options?: RefetchOptions | undefined
+  ) => Promise<QueryObserverResult<userRequestType[], Error>>;
+  friendUserID: number;
 }
 
 const UserList = ({
-  userID,
-  friendUserID,
-  status,
   setRequestData,
   friendList,
+  requestFriend,
+  friendUserID,
 }: UserListType) => {
-  // 친구 요청
-  const { mutate: request } = useMutation({
-    mutationKey: ['postFriendRequest'],
-    mutationFn: async () => {
-      const body = {
-        userID,
-        friendUserID,
-        status: status === 0 && true,
-      };
-      const response = await acceptFriend(body);
-
-      console.log(response);
-    },
-    onError: (err) => {
-      console.log(err);
-    },
-  });
-
+  // queryClient 얻기
+  const queryClient = useQueryClient();
   // 전체 유저 가져오기
-  const getEntireUser = useQuery<userEntireType[]>({
+  const { data: Alldata, refetch: getEntireUser } = useQuery<userEntireType[]>({
     queryKey: ['getEntireUser'],
     queryFn: async () => {
       const response = await getAllUser();
 
       const myFriendIDs = friendList
-        ?.filter((user) => user.status === 1)
+        ?.filter((user) => user.userID === Number(Cookies.get('user_index')))
+        .map((user) => user.friendUserID);
+
+      const myFriendIDs2 = friendList
+        ?.filter(
+          (user) => user.friendUserID === Number(Cookies.get('user_index'))
+        )
         .map((user) => user.userID);
+
+      if (!myFriendIDs2) {
+        return;
+      }
+
+      console.log('친구 아이디들: ', myFriendIDs, myFriendIDs2);
+
+      myFriendIDs?.push(...myFriendIDs2);
 
       const { data } = response;
 
+      console.log(myFriendIDs);
+
+      const removeOne = myFriendIDs?.filter(
+        (id) => id !== Number(Cookies.get('user_index'))
+      );
+
+      // console.log(removeOne);
+
       const usersNotFriends = data.filter((d: userEntireType) => {
-        return !myFriendIDs?.includes(d.user_index);
+        return !removeOne?.includes(d.user_index);
       });
 
       console.log('Users not in friend list: ', usersNotFriends);
 
       return usersNotFriends;
+    },
+  });
+
+  // 친구 요청
+  const friend = useMutation({
+    mutationKey: ['addFriend'],
+    mutationFn: async () => {
+      const response = await addFriends({
+        userID: Number(Cookies.get('user_index')),
+        friendUserID,
+        status: false,
+      });
+
+      // if (response.status === 200) {
+      //   getEntireUser();
+      //   requestFriend();
+      // }
+
+      console.log(response);
+
+      return response.data;
+    },
+    onSuccess: () => {
+      console.log('Mutation successful, refetching...');
+      getEntireUser();
+      console.log('Mutation successful ending, refetching...');
+    },
+    onError: (err) => {
+      console.log(err);
     },
   });
 
@@ -75,12 +117,17 @@ const UserList = ({
       ...prev,
       friendUserID: data.user_index,
     }));
-    request();
+    friend.mutate();
   }
+
+  useEffect(() => {
+    getEntireUser();
+    requestFriend();
+  }, [friendUserID]);
 
   return (
     <>
-      {getEntireUser.data?.map((d, i) => {
+      {Alldata?.map((d, i) => {
         if (Number(Cookies.get('user_index')) !== d.user_index) {
           return (
             <FriendRequestContainer key={i}>
