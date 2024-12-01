@@ -2,7 +2,6 @@
 프로젝트 한줄 설명: 대학교 커뮤니티를 만들어 학생들끼리의 커뮤니케이션을 활성화
 
 ## 💻 UI
-페이지 가져오기
 | 로그인 | 회원가입 |
 | :---: | :----: |
 | ![image](https://github.com/user-attachments/assets/be4607b9-55d1-45bc-8be2-d3cdc36a4ddf) | ![image](https://github.com/user-attachments/assets/e1ef820b-16b7-4d06-950a-0c7452b8c4c7)
