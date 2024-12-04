@@ -1,4 +1,5 @@
 import { SetStateAction, useEffect, useRef, useState } from 'react';
+import Image from 'next/image';
 
 // libraries
 import {
@@ -20,8 +21,12 @@ import { PiUserCircleFill } from 'react-icons/pi';
 import { GrSearch } from 'react-icons/gr';
 import { TbArrowBackUp } from 'react-icons/tb';
 import { SlArrowUpCircle } from 'react-icons/sl';
+
+// components
 import { useSocket } from '@/components/provider/SocketWrapper';
-import axios from 'axios';
+
+// constants
+import { universities } from '@/constants/universities';
 
 interface ChatType {
   chattingData: ChattingDataType[] | undefined;
@@ -37,6 +42,7 @@ interface ChatType {
 interface listType {
   id: number;
   userNickname: string;
+  university: string;
 }
 
 const Chat = ({
@@ -45,7 +51,7 @@ const Chat = ({
   currentMessage,
   setCurrentMessage,
 }: ChatType) => {
-  // console.log('myChat: ', myChat);
+  console.log('myChat: ', myChat);
   // 소켓
   const { socket } = useSocket();
   // 입력중인지 판단
@@ -57,6 +63,7 @@ const Chat = ({
     {
       id: 0,
       userNickname: '',
+      university: '',
     },
   ]);
   // 스크롤 감지 DOM
@@ -69,14 +76,14 @@ const Chat = ({
   function sorting() {
     const myList: listType[] = [];
 
-    const nameList = myChat?.map((chat) => {
+    myChat?.map((chat) => {
       const userNickname = String(chat.chat_user_nickname);
       if (!myList.some((item) => item.userNickname === userNickname)) {
         const id =
           Number(Cookies.get('user_index')) === chat.receiverID
             ? chat.senderID
             : chat.receiverID;
-        myList.push({ id, userNickname });
+        myList.push({ id, userNickname, university: chat.university });
       }
     });
 
@@ -120,27 +127,6 @@ const Chat = ({
     // console.log('입력 끝');
   };
 
-  // async function testInput() {
-  //   if (currentMessage.trim()) {
-  //     try {
-  //       const data = {
-  //         chat_user_id: Number(Cookies.get('user_index')),
-  //         chat_content: currentMessage,
-  //         receiverID: Number(Cookies.get('id')),
-  //       };
-  //       const response = await axios.post('/api/chat', data);
-
-  //       console.log('test input success', response);
-
-  //       if (response.status === 200) {
-  //         setCurrentMessage({ currentMessage: '', receiverID: 0 });
-  //       }
-  //     } catch (e) {
-  //       console.log('test input error', e);
-  //     }
-  //   }
-  // }
-
   const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (e.key === 'Enter' && !e.shiftKey && !isComposing) {
       e.preventDefault();
@@ -162,21 +148,36 @@ const Chat = ({
       return;
     }
 
-    console.log('Setting up socket listeners');
-
     socket.on('message', (message: ChatDataType[]) => {
-      console.log('Message received:', message);
+      // console.log('Message received:', message);
       setChatData((prev) => [...prev, message[0]]);
     });
 
-    // Cleanup
     return () => {
-      console.log('Cleaning up socket listeners');
       socket.off('message');
     };
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [socket]);
+
+  function sortingLogo(universityName: string) {
+    if (universityName) {
+      const logo = universities.filter(
+        (university) => university.name === universityName
+      );
+      // console.log(logo);
+
+      return (
+        <Image
+          src={logo[0].img.src}
+          alt="대학교로고"
+          width={25}
+          height={25}
+          style={{ objectFit: 'contain' }}
+        />
+      );
+    }
+  }
 
   return (
     <ChatData>
@@ -239,7 +240,11 @@ const Chat = ({
                 onClick={() => processChattingRoom(user)}
               >
                 <div style={{ display: 'flex', alignItems: 'center' }}>
-                  <PiUserCircleFill size={30} color="#e1e1e1" />
+                  {user.university ? (
+                    sortingLogo(user.university)
+                  ) : (
+                    <PiUserCircleFill size={30} color="#e1e1e1" />
+                  )}
                 </div>
 
                 <div

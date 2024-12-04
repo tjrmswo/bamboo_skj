@@ -1,26 +1,8 @@
 import { NextApiRequest } from 'next';
-import { ChatDataType, IMessage } from '@/types/chat';
+import { ChatDataType } from '@/types/chat';
 import { NextApiResponseServerIO } from '@/pages/api/socket/io';
 import { createConnection } from '@/lib/db';
 import { ResultSetHeader, RowDataPacket } from 'mysql2/promise';
-
-function checkKorean(str: string) {
-  const regex = /[ㄱ-ㅎ|ㅏ-ㅣ|가-힣]/;
-  return regex.test(str);
-}
-
-interface IUser {
-  user_index: number;
-  user_id: string;
-  user_nickname: string;
-  profile_image: string | null;
-  accessToken: string | null;
-  chat_content: string;
-  user_password?: string;
-  senderID: number;
-  receiverID: number;
-  createAt: string;
-}
 
 const chatHandler = async (
   req: NextApiRequest,
@@ -40,7 +22,7 @@ const chatHandler = async (
 
       console.log('message: ', message);
 
-      const [rows] = await connection.execute<RowDataPacket[]>(
+      await connection.execute<RowDataPacket[]>(
         `SELECT * FROM user WHERE user_index = ? `,
         [chat_user_id]
       );
@@ -61,12 +43,6 @@ const chatHandler = async (
 
         console.log('채팅 생성 성공', createChat);
 
-        // let isKoreanEmitted = false;
-        // if (checkKorean(chat_content) === true && !isKoreanEmitted) {
-        //   res.socket.server.emit('message', message);
-        //   isKoreanEmitted = true;
-        // }
-
         const [getChat] = await connection.execute(
           'SELECT * FROM chat WHERE chat_id = ?',
           [createChat.insertId]
@@ -76,14 +52,9 @@ const chatHandler = async (
 
         const changeType = getChat as ChatDataType[];
 
-        const { user_password, ...data } = rows[0] as IUser;
+        // const { user_password, ...data } = rows[0] as IUser;
         // console.log('user: ', user_password);
         if (createChat.affectedRows > 0) {
-          const Data = {
-            ...data,
-            chat_content,
-          };
-
           res.socket.server.io.emit('message', changeType);
 
           res.status(201).json(getChat);
@@ -109,8 +80,15 @@ const chatHandler = async (
             return u.user_id;
           }
         });
-        return { ...d, chat_user_nickname: addUserId[0].user_nickname };
+
+        return {
+          ...d,
+          chat_user_nickname: addUserId[0].user_nickname,
+          // university: addUserId[0].university,
+        };
       });
+
+      // console.log('inputUserId:', inputUserId);
 
       if (row.length > 0) {
         res.status(200).json(inputUserId);

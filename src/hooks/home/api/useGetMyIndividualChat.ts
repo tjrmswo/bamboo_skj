@@ -15,7 +15,11 @@ const useGetMyIndividualChat = () => {
       const chat_user_id = Number(Cookies.get('user_index'));
       const response = await getMyChat(chat_user_id);
 
-      console.log(response);
+      if (response.status === 404) {
+        throw new Error('채팅이 존재하지 않습니다!');
+      }
+
+      // console.log(response);
       return response.data;
     },
   });

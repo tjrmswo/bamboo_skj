@@ -9,7 +9,7 @@ import Cookie from 'js-cookie';
 
 // types
 import { BoardDataType, BoardType } from '@/types/home';
-import { IMessage, messageType } from '@/types/chat';
+import { messageType } from '@/types/chat';
 
 //constants
 import { sortValues } from '@/constants/boardSortingValue';
@@ -53,9 +53,6 @@ import { navContext } from '@/context/homeContext';
 // icons
 import { IoChatbubbleEllipsesOutline } from 'react-icons/io5';
 
-// context
-import { useSocket } from '@/components/provider/SocketWrapper';
-
 const Home = () => {
   // 라우터
   const router = useRouter();
@@ -64,7 +61,6 @@ const Home = () => {
     currentMessage: '',
     receiverID: 0,
   });
-  const { socket } = useSocket();
 
   const { currentMessage, receiverID } = message;
   // 컴포넌트 내에서
@@ -81,11 +77,13 @@ const Home = () => {
   const [, setData] = useState<BoardType[]>([
     {
       id: 0,
+      user_nickname: '',
       board_title: '',
       board_content: '',
       board_user_id: '',
       board_img: '',
       createdAt: '',
+      university: '',
     },
   ]);
   // 게시글 입력 데이터
@@ -106,11 +104,13 @@ const Home = () => {
   const [infiniteBoardData, setInfiniteBoardData] = useState<BoardType[]>([
     {
       id: 0,
+      user_nickname: '',
       board_title: '',
       board_content: '',
       board_user_id: '',
       board_img: '',
       createdAt: '',
+      university: '',
     },
   ]);
   // 무한 페이지 컨트롤
@@ -388,6 +388,10 @@ const Home = () => {
     { isOpen: friendRequestModal, close: closeFriendModal },
   ];
 
+  // useEffect(() => {
+  //   console.log('선택된 게시글 데이터: ', selected);
+  // }, [selected]);
+
   return (
     <Container>
       <div id="modal-container"></div>
@@ -404,7 +408,12 @@ const Home = () => {
         handleFriendModal={handleFriendModal}
       />
       {friendRequestModal && (
-        <Modal openModal={handleFriendModal} modal={friendRequestModal}>
+        <Modal
+          width={50}
+          height={70}
+          openModal={handleFriendModal}
+          modal={friendRequestModal}
+        >
           <Friend />
         </Modal>
       )}
@@ -437,7 +446,7 @@ const Home = () => {
           getPagingBoard={getPagingBoard}
         />
         {isOpened && (
-          <Modal openModal={openModal} modal={isOpened}>
+          <Modal width={50} height={75} openModal={openModal} modal={isOpened}>
             <BoardInfo
               selected={selected}
               boardModify={boardModify}
