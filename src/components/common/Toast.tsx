@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import ReactDOM from 'react-dom';
-import { ToastContainer } from './styles';
+import { ToastContainer } from '@/styles/common/styles';
 
 interface ToastType {
   children: React.ReactNode;
@@ -20,10 +20,8 @@ const Toast = ({ children, stateCode }: ToastType) => {
   useEffect(() => {
     const firstChar = stateCode.charAt(0);
     if (firstChar === '4') {
-      // console.log('Error case handled');
       setIcon(messageIcon.error);
     } else if (firstChar === '2') {
-      // console.log('Correct case handled');
       setIcon(messageIcon.correct);
     }
   }, [stateCode]);

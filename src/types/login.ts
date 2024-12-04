@@ -1,6 +1,8 @@
 export interface userType {
   user_id: string;
+  user_nickname: string;
   user_password: string;
+  university: string;
 }
 
 export interface kakaoUserType {

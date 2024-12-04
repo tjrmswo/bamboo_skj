@@ -1,6 +1,8 @@
 import { useEffect, useState } from 'react';
 import ReactDOM from 'react-dom';
-import { ModalContainer } from '../common/styles';
+
+// styles
+import { ModalContainer } from '../../styles/common/styles';
 
 // icons
 import { IoClose } from 'react-icons/io5';
@@ -22,7 +24,7 @@ const ModalBoard = ({ openModal, children }: ModalType) => {
   if (!modalRoot) return null;
 
   return ReactDOM.createPortal(
-    <ModalContainer>
+    <ModalContainer width={30} height={70}>
       <div className="modal" onClick={(e) => e.stopPropagation()}>
         {/* 모달 헤더 */}
         <div className="modalHeader">

@@ -9,6 +9,7 @@ import Cookie from 'js-cookie';
 
 // types
 import { BoardDataType, BoardType } from '@/types/home';
+import { messageType } from '@/types/chat';
 
 //constants
 import { sortValues } from '@/constants/boardSortingValue';
@@ -23,6 +24,7 @@ import MainContent from '@/components/home/MainContent';
 import BoardInfo from '@/components/home/BoardInfo';
 import ChatModal from '@/components/home/ChattModal';
 import Chat from '@/components/home/ChatModal/Chat';
+import Friend from '@/components/home/Friend';
 
 // hooks
 import useModalOpen, { useModalOpenType } from '@/hooks/home/useModalOpen';
@@ -41,20 +43,26 @@ import usePostBoardWrite from '@/hooks/home/api/usePostBoardWrite';
 import usePatchBoard from '@/hooks/home/api/usePatchBoard';
 import usePostSendMessage from '@/hooks/home/api/usePostSendMessage';
 import useGetChattingData from '@/hooks/home/api/useGetChattingData';
+import useInfiniteScroll from '@/hooks/home/api/useInfiniteScroll';
+import useGetInfiniteScroll from '@/hooks/home/api/useGetInfiniteScroll';
+import useGetMyIndividualChat from '@/hooks/home/api/useGetMyIndividualChat';
 
 // context
 import { navContext } from '@/context/homeContext';
 
 // icons
 import { IoChatbubbleEllipsesOutline } from 'react-icons/io5';
-import useInfiniteScroll from '@/hooks/home/api/useInfiniteScroll';
-import useGetInfiniteScroll from '@/hooks/home/api/useGetInfiniteScroll';
 
 const Home = () => {
   // 라우터
   const router = useRouter();
   // 채팅
-  const [currentMessage, setCurrentMessage] = useState<string>('');
+  const [message, setCurrentMessage] = useState<messageType>({
+    currentMessage: '',
+    receiverID: 0,
+  });
+
+  const { currentMessage, receiverID } = message;
   // 컴포넌트 내에서
   const fileInputRef = useRef<HTMLInputElement | null>(null);
   // 게시글 수정
@@ -69,11 +77,13 @@ const Home = () => {
   const [, setData] = useState<BoardType[]>([
     {
       id: 0,
+      user_nickname: '',
       board_title: '',
       board_content: '',
       board_user_id: '',
       board_img: '',
       createdAt: '',
+      university: '',
     },
   ]);
   // 게시글 입력 데이터
@@ -94,21 +104,23 @@ const Home = () => {
   const [infiniteBoardData, setInfiniteBoardData] = useState<BoardType[]>([
     {
       id: 0,
+      user_nickname: '',
       board_title: '',
       board_content: '',
       board_user_id: '',
       board_img: '',
       createdAt: '',
+      university: '',
     },
   ]);
   // 무한 페이지 컨트롤
   const [currentPage, setCurrentPage] = useState<number>(0);
-  // 처음 로딩에 대한 플래그 추가
-  // const [isFirstLoad, setIsFirstLoad] = useState(true);
   // 삭제되는 게시글 아이디
   const [deleteBoardId, setDeleteBoardId] = useState<number>(0);
   // 초기화 플래그
   const [isInitialized, setIsInitialized] = useState<boolean>(false);
+
+  const [friendRequestModal, setFriendRequestModal] = useState<boolean>(false);
 
   // FormData 생성
   const formData = useFormData({
@@ -156,11 +168,6 @@ const Home = () => {
     }
   }, [successScrollData, isInitialized]);
 
-  // useEffect(() => {
-  //   console.log(1);
-  //   console.log(2);
-  // }, []);
-
   const { mutate: getPagingBoardDelete } = useGetInfiniteScroll({
     setInfiniteBoardData,
     deleteBoardId,
@@ -174,6 +181,9 @@ const Home = () => {
   const { data: chattingData, refetch: refetchChattingData } =
     useGetChattingData(); // 채팅 GET
 
+  const { data: myChat, refetch: getMyIndividualChat } =
+    useGetMyIndividualChat(); // 1대1 채팅방 데이터 GET
+
   const { mutate: postBoard } = usePostBoardWrite({
     closeModalBoard,
     refetchAllData,
@@ -182,8 +192,10 @@ const Home = () => {
 
   const { mutate: sendMessages } = usePostSendMessage({
     currentMessage,
+    receiverID,
     setCurrentMessage,
     refetchChattingData,
+    getMyIndividualChat,
   }); // 채팅 메세지 보내기
 
   // 정렬
@@ -220,6 +232,8 @@ const Home = () => {
   const handleDropdown = () => setDropdownBoolean(!dropdownBoolean);
   // 채팅 모달
   const handleChatModal = () => setChattingModalBoolean(!chattingModalBoolean);
+  // 친구창
+  const handleFriendModal = () => setFriendRequestModal(!friendRequestModal);
 
   // 게시글 작성 모달 열기
   function openModalBoard() {
@@ -239,6 +253,11 @@ const Home = () => {
   // 게시글 작성 모달 닫기
   function closeModalChat() {
     setChattingModalBoolean(false);
+  }
+
+  // 친구창 모달 닫기
+  function closeFriendModal() {
+    setFriendRequestModal(false);
   }
 
   // 이미지 수정
@@ -362,35 +381,43 @@ const Home = () => {
     }
   }, []);
 
-  useEffect(() => {
-    console.log('infiniteBoardData:', infiniteBoardData);
-    console.log('currentPage:', currentPage);
-  }, [infiniteBoardData, currentPage]);
+  const modalStates = [
+    { isOpen: isOpened, close: closeModal },
+    { isOpen: isBoardOpened, close: closeModalBoard },
+    { isOpen: chattingModalBoolean, close: closeModalChat },
+    { isOpen: friendRequestModal, close: closeFriendModal },
+  ];
+
+  // useEffect(() => {
+  //   console.log('선택된 게시글 데이터: ', selected);
+  // }, [selected]);
 
   return (
     <Container>
       <div id="modal-container"></div>
       <div id="modal-container2"></div>
       <div id="modal-chat"></div>
-      {isOpened && (
-        <div className="background" onClick={closeModal}>
-          {' '}
-        </div>
-      )}
-      {isBoardOpened && (
-        <div className="background" onClick={closeModalBoard}>
-          {' '}
-        </div>
-      )}
-      {chattingModalBoolean && (
-        <div className="background" onClick={closeModalChat}>
-          {' '}
-        </div>
+      {modalStates.map((modal, index) =>
+        modal.isOpen ? (
+          <div key={index} className="background" onClick={modal.close}></div>
+        ) : null
       )}
       <Header
         handleDropdown={handleDropdown}
         dropdownBoolean={dropdownBoolean}
+        handleFriendModal={handleFriendModal}
       />
+      {friendRequestModal && (
+        <Modal
+          width={50}
+          height={70}
+          openModal={handleFriendModal}
+          modal={friendRequestModal}
+        >
+          <Friend />
+        </Modal>
+      )}
+
       <div
         style={{
           width: '70%',
@@ -419,7 +446,7 @@ const Home = () => {
           getPagingBoard={getPagingBoard}
         />
         {isOpened && (
-          <Modal openModal={openModal} modal={isOpened}>
+          <Modal width={50} height={75} openModal={openModal} modal={isOpened}>
             <BoardInfo
               selected={selected}
               boardModify={boardModify}
@@ -443,10 +470,16 @@ const Home = () => {
           currentMessage={currentMessage}
           setCurrentMessage={setCurrentMessage}
         >
-          <Chat chattingData={chattingData} />
+          <Chat
+            chattingData={chattingData}
+            myChat={myChat}
+            sendMessages={sendMessages}
+            currentMessage={currentMessage}
+            setCurrentMessage={setCurrentMessage}
+            getMyIndividualChat={getMyIndividualChat}
+          />
         </ChatModal>
       )}
-      {/* <div ref={bottomRef} className="bottom" style={{ height: '10px' }}></div> */}
     </Container>
   );
 };

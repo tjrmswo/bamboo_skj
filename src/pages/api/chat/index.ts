@@ -1,23 +1,8 @@
 import { NextApiRequest } from 'next';
-import { IMessage } from '@/types/chat';
+import { ChatDataType } from '@/types/chat';
 import { NextApiResponseServerIO } from '@/pages/api/socket/io';
 import { createConnection } from '@/lib/db';
 import { ResultSetHeader, RowDataPacket } from 'mysql2/promise';
-
-function checkKorean(str: string) {
-  const regex = /[ㄱ-ㅎ|ㅏ-ㅣ|가-힣]/;
-  return regex.test(str);
-}
-
-interface IUser {
-  user_index: number;
-  user_id: string;
-  user_nickname: string;
-  profile_image: string | null;
-  accessToken: string | null;
-  chat_content: string;
-  user_password?: string;
-}
 
 const chatHandler = async (
   req: NextApiRequest,
@@ -27,42 +12,57 @@ const chatHandler = async (
 
   try {
     if (req.method === 'POST') {
-      const { chat_content, chat_user_id } = req.body;
-      const message = req.body as IMessage;
+      const { chat_content, chat_user_id, receiverID } = req.body;
+      const message = {
+        currentMessage: chat_content,
+        receiverID: receiverID,
+      };
+      const senderID = chat_user_id;
+      // const receiverID = 38;
 
       console.log('message: ', message);
 
-      const [rows] = await connection.execute<RowDataPacket[]>(
+      await connection.execute<RowDataPacket[]>(
         `SELECT * FROM user WHERE user_index = ? `,
         [chat_user_id]
       );
 
-      const chat = await connection.execute<ResultSetHeader>(
-        `INSERT INTO chat (chat_user_id, chat_content) VALUES (?, ?)`,
-        [chat_user_id, chat_content]
+      // 친구인지 판별하는 쿼리
+      const [areWeFriends] = await connection.execute<RowDataPacket[]>(
+        'SELECT * FROM friend WHERE (userID = ? AND friendUserID = ?) OR (userID = ? AND friendUserID = ?)',
+        [chat_user_id, receiverID, receiverID, chat_user_id]
       );
 
-      let isKoreanEmitted = false;
-      if (checkKorean(chat_content) === true && !isKoreanEmitted) {
-        res.socket.server.emit('message', message);
-        isKoreanEmitted = true;
-      }
+      // console.log('친구 판별', areWeFriends);
 
-      if (rows.length > 0) {
-        const { user_password, ...data } = rows[0] as IUser;
-        console.log('user: ', user_password);
+      if (areWeFriends.length > 0) {
+        const [createChat] = await connection.execute<ResultSetHeader>(
+          `INSERT INTO chat (chat_user_id, chat_content, senderID, receiverID, createAt) VALUES (?, ?, ?, ?, NOW() + INTERVAL 9 HOUR)`,
+          [chat_user_id, chat_content, senderID, receiverID]
+        );
 
-        if (chat[0].affectedRows > 0) {
-          const Data = {
-            ...data,
-            chat_content,
-          };
-          res.status(201).json(Data);
+        console.log('채팅 생성 성공', createChat);
+
+        const [getChat] = await connection.execute(
+          'SELECT * FROM chat WHERE chat_id = ?',
+          [createChat.insertId]
+        );
+
+        console.log('채팅 생성 후 데이터 가져오기: ', getChat);
+
+        const changeType = getChat as ChatDataType[];
+
+        // const { user_password, ...data } = rows[0] as IUser;
+        // console.log('user: ', user_password);
+        if (createChat.affectedRows > 0) {
+          res.socket.server.io.emit('message', changeType);
+
+          res.status(201).json(getChat);
         } else {
           res.status(404).json({ message: 'Invalid Chat Data!' });
         }
       } else {
-        res.status(404).json({ message: 'User not found!' });
+        res.status(404).json({ message: 'Not Found Friend Info!' });
       }
     } else if (req.method === 'GET') {
       const [row] =
@@ -80,8 +80,15 @@ const chatHandler = async (
             return u.user_id;
           }
         });
-        return { ...d, chat_user_nickname: addUserId[0].user_nickname };
+
+        return {
+          ...d,
+          chat_user_nickname: addUserId[0].user_nickname,
+          // university: addUserId[0].university,
+        };
       });
+
+      // console.log('inputUserId:', inputUserId);
 
       if (row.length > 0) {
         res.status(200).json(inputUserId);

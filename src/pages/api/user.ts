@@ -13,9 +13,13 @@ export default async function handler(
     if (req.method === 'GET') {
       const [users] =
         await connection.execute<RowDataPacket[]>('SELECT * FROM user');
-      res.status(200).json(users);
+
+      if (users.length > 0) {
+        res.status(200).json(users);
+      }
     } else if (req.method === 'POST') {
-      const { user_id, user_password }: userType = req.body;
+      const { user_id, user_password, user_nickname, university }: userType =
+        req.body;
 
       const [rows] = await connection.execute<RowDataPacket[]>(
         `SELECT * FROM user WHERE user_id = ?`,
@@ -24,8 +28,8 @@ export default async function handler(
 
       if (rows.length === 0) {
         await connection.execute<ResultSetHeader>(
-          'INSERT INTO user (user_id, user_password) VALUES (?, ?)',
-          [user_id, user_password]
+          'INSERT INTO user (user_id, user_password, user_nickname, university) VALUES (?, ?, ?, ?)',
+          [user_id, user_password, user_nickname, university]
         );
         res.status(201).json({ success: true, data: user_id }); // 201: Created
       } else {

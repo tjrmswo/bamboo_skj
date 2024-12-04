@@ -17,14 +17,14 @@ import { RiKakaoTalkFill } from 'react-icons/ri';
 import { userType } from '@/types/login';
 
 // apis
+import usePostUserLogin from '@/hooks/login/api/usePostUserLogin';
+import useGetFindUser from '@/hooks/login/api/useGetFindUser';
 
 // components
 import Toast from '@/components/common/Toast';
 
 // libraries
 import { ToastStateType } from '@/types/home';
-import usePostUserLogin from '@/hooks/login/api/usePostUserLogin';
-import useGetFindUser from '@/hooks/login/api/useGetFindUser';
 
 const Login = () => {
   const [isClient, setIsClient] = useState<boolean>(false);
@@ -40,7 +40,9 @@ const Login = () => {
   // login data
   const [loginData, setLoginData] = useState<userType>({
     user_id: '',
+    user_nickname: '',
     user_password: '',
+    university: '',
   });
 
   const userIndex = isClient && localStorage.getItem('user_index');

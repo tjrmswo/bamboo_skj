@@ -7,6 +7,8 @@ export interface BoardType {
   board_user_id: string;
   board_img: File | string | null;
   createdAt: string;
+  university: string;
+  user_nickname: string;
 }
 
 export interface ToastStateType {
@@ -37,4 +39,22 @@ export interface NavContextType {
 export interface pagingType {
   offset: number;
   limit: number;
+}
+
+export interface userRequestType {
+  createAt: string;
+  friendUserID: number;
+  id: number;
+  status: number;
+  userID: number;
+  userEmail: string;
+}
+
+export interface userEntireType {
+  user_index: number;
+  user_id: string;
+  user_nickname: string;
+  user_password: string;
+  profile_image: string;
+  accessToken: string;
 }

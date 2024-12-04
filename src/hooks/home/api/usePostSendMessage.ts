@@ -1,26 +1,35 @@
+import { SetStateAction } from 'react';
+
 // libraries
-import { postChatMessage } from '@/pages/api/clients/home';
-import { ChattingDataType } from '@/types/chat';
 import {
   QueryObserverResult,
   RefetchOptions,
   useMutation,
 } from '@tanstack/react-query';
 import Cookie from 'js-cookie';
-import { SetStateAction } from 'react';
+
+//apis
+import { postChatMessage } from '@/pages/api/clients/home';
+
+// types
+import { ChatDataType, ChattingDataType, messageType } from '@/types/chat';
 
 interface usePostSendMessageType {
   currentMessage: string;
-  setCurrentMessage: React.Dispatch<SetStateAction<string>>;
+  receiverID: number;
+  setCurrentMessage: React.Dispatch<SetStateAction<messageType>>;
   refetchChattingData: (
     options?: RefetchOptions | undefined
   ) => Promise<QueryObserverResult<ChattingDataType[], Error>>;
+  getMyIndividualChat: (
+    options?: RefetchOptions | undefined
+  ) => Promise<QueryObserverResult<ChatDataType[], Error>>;
 }
 
 const usePostSendMessage = ({
   currentMessage,
   setCurrentMessage,
-  refetchChattingData,
+  getMyIndividualChat,
 }: usePostSendMessageType) => {
   return useMutation({
     mutationKey: ['sendMessage'],
@@ -28,15 +37,18 @@ const usePostSendMessage = ({
       const data = {
         chat_user_id: Number(Cookie.get('user_index')),
         chat_content: currentMessage,
+        receiverID: Number(Cookie.get('id')),
       };
 
       const res = await postChatMessage(data);
-      setCurrentMessage('');
+      setCurrentMessage({ currentMessage: '', receiverID: 0 });
 
       console.log(res);
+
+      return res.data;
     },
     onSuccess: () => {
-      refetchChattingData();
+      getMyIndividualChat();
     },
   });
 };
