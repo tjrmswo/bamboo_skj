@@ -1,27 +1,62 @@
-import { createContext } from 'react';
+import { SetStateAction, createContext } from 'react';
+
+// types
+import { messageType } from '@/types/chat';
+import { BoardType } from '@/types/home';
 
 // 상태 타입 정의
 export interface NavContextType {
-  isBoardOpened: boolean;
-  setIsBoardOpened: React.Dispatch<React.SetStateAction<boolean>>;
-  openModalBoard: () => void;
   inputBoardData: (sort: string, value: string | number) => void;
   writeBoard: () => void;
-  sortingBoards: (value: string) => void;
   handleBoardImg: (e: React.ChangeEvent<HTMLInputElement>) => void;
+  sortingBoards: (value: string) => void;
   sortValues: string[];
-  // sendMessage: () => Promise<void>;
+}
+
+export interface ChatContextType {
+  currentMessage: string;
+  setCurrentMessage: React.Dispatch<SetStateAction<messageType>>;
+}
+
+export interface BoardContextType {
+  inputSelectedBoardData: (sort: string, value: string | number) => void;
+  selected: BoardType;
+  boardModify: boolean;
+  handleImageClick: () => void;
+  fileInputRef: React.MutableRefObject<HTMLInputElement | null>;
+  PatchBoardData(): void;
+  modifyChange(): void;
 }
 
 // Context 생성 및 초기값 설정
 export const navContext = createContext<NavContextType>({
-  isBoardOpened: false,
-  setIsBoardOpened: () => {},
-  openModalBoard: () => {},
   inputBoardData: () => {},
   writeBoard: () => {},
-  sortingBoards: () => {},
   handleBoardImg: () => {},
+  sortingBoards: () => {},
   sortValues: [],
-  // sendMessage: () => {},
+});
+
+export const chatContext = createContext<ChatContextType>({
+  currentMessage: '',
+  setCurrentMessage: () => {},
+});
+
+export const boardContext = createContext<BoardContextType>({
+  inputSelectedBoardData: () => {},
+  selected: {
+    id: 0,
+    board_title: '',
+    board_content: '',
+    board_user_id: '',
+    board_img: '',
+    createdAt: '',
+    university: '',
+    user_nickname: '',
+  },
+  boardModify: false,
+  handleImageClick: () => {},
+  fileInputRef: { current: null },
+  PatchBoardData: () => {},
+  modifyChange: () => {},
 });
