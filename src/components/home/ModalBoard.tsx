@@ -6,6 +6,7 @@ import { ModalContainer } from '../../styles/common/styles';
 
 // icons
 import { IoClose } from 'react-icons/io5';
+
 interface ModalType {
   children: React.ReactNode;
   modal: boolean;
@@ -24,20 +25,12 @@ const ModalBoard = ({ openModal, children }: ModalType) => {
   if (!modalRoot) return null;
 
   return ReactDOM.createPortal(
-    <ModalContainer width={30} height={70}>
+    <ModalContainer width={50} height={70}>
       <div className="modal" onClick={(e) => e.stopPropagation()}>
         {/* 모달 헤더 */}
         <div className="modalHeader">
           <div onClick={openModal}>
-            <IoClose
-              style={{
-                marginRight: '0.4rem',
-                width: '20',
-                height: '20',
-                cursor: 'pointer',
-                color: 'white',
-              }}
-            />
+            <IoClose className="close" />
           </div>
         </div>
         {/* 모달 컨텐츠 부분 */}

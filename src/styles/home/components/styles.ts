@@ -76,6 +76,16 @@ export const ChattingContainer = styled.div`
       }
     }
   }
+
+  @media (min-width: 900px) and (max-width: 1070px) {
+    width: 300px;
+    height: 450px;
+  }
+
+  @media (max-width: 900px) {
+    width: 250px;
+    height: 400px;
+  }
 `;
 
 export const ChatData = styled.div`
@@ -176,6 +186,24 @@ export const ChatData = styled.div`
       font-size: 0.8rem;
       font-family: 'RobotoLight';
       font-weight: 550;
+    }
+  }
+
+  @media (min-width: 900px) and (max-width: 1070px) {
+    .userName {
+      font-size: 0.7rem;
+    }
+
+    .myContent {
+      font-size: 0.6rem;
+    }
+
+    .otherUserName {
+      font-size: 0.7rem;
+    }
+
+    .otherContent {
+      font-size: 0.6rem;
     }
   }
 `;

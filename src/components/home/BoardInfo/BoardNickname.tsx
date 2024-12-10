@@ -5,6 +5,7 @@ import { boardContext } from '@/context/homeContext';
 
 // styles
 import { Flex } from '@/styles/common/direction';
+
 interface BoardNicknameType {
   sortingLogo(universityName: string): JSX.Element | undefined;
 }
@@ -12,6 +13,7 @@ const BoardNickname = ({ sortingLogo }: BoardNicknameType) => {
   const context = useContext(boardContext);
 
   const { selected } = context;
+
   return (
     <div
       style={{
@@ -23,7 +25,9 @@ const BoardNickname = ({ sortingLogo }: BoardNicknameType) => {
       }}
     >
       {sortingLogo(selected.university)}
-      <span style={{ marginLeft: '5px' }}>{selected.user_nickname}</span>
+      <span className="nickname" style={{ marginLeft: '5px' }}>
+        {selected.user_nickname}
+      </span>
     </div>
   );
 };

@@ -16,15 +16,15 @@ export const Container = styled.div<{ $borderColor: string }>`
   box-shadow: ${(props) => {
     switch (props.$borderColor) {
       case '#0B4A8F':
-        return `inset 0px 0px 10px 8px #0B4A8F`; // universityBlue
+        return `inset 0px 0px 10px 8px #0B4A8F`;
       case '#42AE37':
-        return `inset 0px 0px 10px 8px #42AE37`; // universityGreen
+        return `inset 0px 0px 10px 8px #42AE37`;
       case '#D60F14':
-        return `inset 0px 0px 10px 5px #D60F14`; // universityRed
+        return `inset 0px 0px 10px 5px #D60F14`;
       case '#8B7E75':
-        return `inset 0px 0px 10px 8px #8B7E75`; // universityGray
+        return `inset 0px 0px 10px 8px #8B7E75`;
       default:
-        return; // 기본 색상
+        return;
     }
   }};
 `;
@@ -38,6 +38,15 @@ export const SignupContainer = styled.div`
 
   animation: 1s ${showContainer};
   animation-fill-mode: forwards;
+
+  .container {
+    height: 75%;
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+    justify-content: space-between;
+    transform: translateY(-10%);
+  }
 
   .inputContainer {
     width: 30vw;
@@ -61,6 +70,46 @@ export const SignupContainer = styled.div`
 
     &:focus-within {
       border: 2px solid ${theme.primary};
+    }
+  }
+
+  @media (min-width: 1000px) and (max-width: 1070px) {
+    .container {
+      height: 70%;
+    }
+
+    .inputContainer {
+      width: 25vw;
+      height: 30px;
+    }
+  }
+
+  @media (min-width: 800px) and (max-width: 1000px) {
+    .container {
+      height: 67%;
+    }
+
+    h2 {
+      font-size: 1.3rem;
+    }
+
+    .inputContainer {
+      width: 23vw;
+      height: 28px;
+    }
+  }
+
+  @media (max-width: 800px) {
+    .container {
+      height: 64%;
+    }
+
+    h2 {
+      font-size: 1.2rem;
+    }
+    .inputContainer {
+      width: 23vw;
+      height: 24px;
     }
   }
 
@@ -109,15 +158,15 @@ export const InputContainer = styled.div<{ $borderColor: string }>`
   border: ${(props) => {
     switch (props.$borderColor) {
       case '#0B4A8F':
-        return `2px solid #0B4A8F`; // universityBlue
+        return `2px solid #0B4A8F`;
       case '#42AE37':
-        return `2px solid #42AE37`; // universityGreen
+        return `2px solid #42AE37`;
       case '#D60F14':
-        return `2px solid #D60F14`; // universityRed
+        return `2px solid #D60F14`;
       case '#8B7E75':
-        return `2px solid #8B7E75`; // universityGray
+        return `2px solid #8B7E75`;
       default:
-        return `2px solid ${theme.inputBorderColor}`; // 기본 색상
+        return `2px solid ${theme.inputBorderColor}`;
     }
   }};
   padding: 5px;
@@ -129,5 +178,20 @@ export const InputContainer = styled.div<{ $borderColor: string }>`
     border: none;
     font-family: 'GmarketSansMedium';
     color: black;
+  }
+
+  @media (min-width: 1000px) and (max-width: 1070px) {
+    width: 25vw;
+    height: 30px;
+  }
+
+  @media (min-width: 800px) and (max-width: 1000px) {
+    width: 23vw;
+    height: 28px;
+  }
+
+  @media (max-width: 800px) {
+    width: 23vw;
+    height: 24px;
   }
 `;

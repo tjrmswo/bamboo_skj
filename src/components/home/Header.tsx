@@ -46,7 +46,7 @@ const Header = ({
       <span className="projectTitle">FrontLine▹</span>
       <HomeInput />
       <div className="headerContainer">
-        {isClient && userId.length > 0 ? ( // 기본값을 설정해 효과가 없다면 프리벤션
+        {isClient && userId.length > 0 ? (
           <div style={{ ...Flex, flexDirection: 'column' }}>
             <FaUserCircle size={25} className="user" onClick={handleDropdown} />
             {dropdownBoolean && (
@@ -58,7 +58,6 @@ const Header = ({
                   marginTop: '6.5rem',
                   justifyContent: 'space-evenly',
                   height: '75px',
-                  // height: '200px',
                 }}
               >
                 <FaUserFriends

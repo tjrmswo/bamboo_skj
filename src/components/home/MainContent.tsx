@@ -23,6 +23,8 @@ interface MainContentType {
     variables: void,
     options?: MutateOptions<BoardType[], Error, void, unknown> | undefined
   ) => void;
+  width: number;
+  height: number;
 }
 
 const MainContent = ({
@@ -30,6 +32,8 @@ const MainContent = ({
   getSelectedData,
   boardDelete,
   getPagingBoard,
+  width,
+  height,
 }: MainContentType) => {
   const bottomRef = useRef(null);
 
@@ -47,21 +51,52 @@ const MainContent = ({
       }
     );
 
-    const currentRef = bottomRef.current; // 현재 ref 값을 변수에 복사
+    const currentRef = bottomRef.current;
 
     if (currentRef) {
-      observer.observe(currentRef); // 변수 사용
+      observer.observe(currentRef);
     }
 
     return () => {
       if (currentRef) {
-        observer.unobserve(currentRef); // 클린업 시 변수 사용
+        observer.unobserve(currentRef);
       }
     };
   }, []);
 
+  function sortingWidthOfTitle(title: string) {
+    switch (true) {
+      case width > 970:
+        return <span>{title}</span>;
+      case width < 970 && width > 850:
+        return <span>{`${title.slice(0, 3)}...`}</span>;
+      case width < 850:
+        return <span>{`${title}`}</span>;
+      default:
+        break;
+    }
+  }
+
+  function sortingWidthOfImage(img: string | File | null) {
+    switch (true) {
+      case width < 1500:
+        return (
+          img &&
+          typeof img === 'string' && (
+            <Image
+              src={img}
+              alt="게시글 이미지"
+              width={50}
+              height={50}
+              priority
+            />
+          )
+        );
+    }
+  }
+
   return (
-    <Main aria-label="전체데이터">
+    <Main aria-label="전체데이터" $width={width}>
       {data.map((d, i) => (
         <div
           className="boardContainer"
@@ -73,20 +108,17 @@ const MainContent = ({
             <div className="boardHeader">&nbsp;</div>
             <div className="boardRow">
               <div className="boardStructure">
-                <div className="boardTitle">{d.board_title}</div>
-                <span className="boardCreateAt">{d.createdAt}</span>
+                <div className="boardTitle">
+                  {sortingWidthOfTitle(d.board_title)}
+                </div>
+                <span className="boardCreateAt">
+                  {width < 970 ? `${d.createdAt.slice(5, 16)}` : d.createdAt}
+                </span>
               </div>
-              {d.board_img && typeof d.board_img === 'string' && (
-                <Image
-                  src={d.board_img}
-                  alt="게시글 이미지"
-                  width={50}
-                  height={50}
-                  priority
-                />
-              )}
+              {sortingWidthOfImage(d.board_img)}
             </div>
             <div
+              className="btnRow"
               style={{
                 ...Flex,
                 justifyContent: 'flex-end',

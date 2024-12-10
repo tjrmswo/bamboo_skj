@@ -16,6 +16,7 @@ export interface NavContextType {
 export interface ChatContextType {
   currentMessage: string;
   setCurrentMessage: React.Dispatch<SetStateAction<messageType>>;
+  width: number;
 }
 
 export interface BoardContextType {
@@ -26,6 +27,7 @@ export interface BoardContextType {
   fileInputRef: React.MutableRefObject<HTMLInputElement | null>;
   PatchBoardData(): void;
   modifyChange(): void;
+  width: number;
 }
 
 // Context 생성 및 초기값 설정
@@ -40,6 +42,7 @@ export const navContext = createContext<NavContextType>({
 export const chatContext = createContext<ChatContextType>({
   currentMessage: '',
   setCurrentMessage: () => {},
+  width: 0,
 });
 
 export const boardContext = createContext<BoardContextType>({
@@ -59,4 +62,5 @@ export const boardContext = createContext<BoardContextType>({
   fileInputRef: { current: null },
   PatchBoardData: () => {},
   modifyChange: () => {},
+  width: 0,
 });
