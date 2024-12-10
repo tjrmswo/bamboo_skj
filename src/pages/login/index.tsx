@@ -56,7 +56,7 @@ const Login = () => {
     height: 0,
   });
 
-  const { width, height } = viewportSize;
+  const { width } = viewportSize;
 
   useEffect(() => {
     setIsClient(true);
@@ -93,7 +93,7 @@ const Login = () => {
     }
   }
 
-  // React Query
+  // TanStack Query
   const { mutate: userLogins } = usePostUserLogin({
     loginData,
     setToastState,

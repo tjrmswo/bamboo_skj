@@ -52,14 +52,12 @@ import { chatContext, navContext, boardContext } from '@/context/homeContext';
 import { IoChatbubbleEllipsesOutline } from 'react-icons/io5';
 
 const Home = () => {
-  // 초기화
-  const [isInitialize, setIsInitialize] = useState<boolean>(false);
   // 뷰포트 크기
   const [viewportSize, setViewportSize] = useState({
     width: 0,
     height: 0,
   });
-  const { width, height } = viewportSize;
+  const { width } = viewportSize;
   // 라우터
   const router = useRouter();
   // 채팅
@@ -147,7 +145,7 @@ const Home = () => {
     board_img: selected.board_img,
   });
 
-  // React Query
+  // TanStack Query
   const { refetch: refetchAllData } = useGetAllData({
     setData,
   }); // 모든 데이터 GET
@@ -285,14 +283,6 @@ const Home = () => {
     }))
   );
 
-  // 게시글 이미지 get
-  const handleSelectedImg = useFileInput((file) =>
-    setSelected((prev) => ({
-      ...prev,
-      board_img: file,
-    }))
-  );
-
   // 수정 버튼 변환
   function modifyChange() {
     setBoardModify(!boardModify);
@@ -335,7 +325,6 @@ const Home = () => {
   // 게시글 삭제 함수
   function boardDelete(id: number) {
     deleteBoards(id);
-    //setState 함수
     setDeleteBoardId(id);
   }
 
@@ -453,7 +442,6 @@ const Home = () => {
           boardDelete={boardDelete}
           getPagingBoard={getPagingBoard}
           width={width}
-          height={height}
         />
         {isOpened && (
           <Modal width={50} height={75} openModal={openModal} modal={isOpened}>
@@ -469,10 +457,7 @@ const Home = () => {
                 width,
               }}
             >
-              <BoardInfo
-                handleSelectedImg={handleSelectedImg}
-                setSelected={setSelected}
-              />
+              <BoardInfo setSelected={setSelected} />
             </boardContext.Provider>
           </Modal>
         )}
@@ -495,7 +480,6 @@ const Home = () => {
             <Chat
               myChat={myChat}
               sendMessages={sendMessages}
-              currentMessage={currentMessage}
               setCurrentMessage={setCurrentMessage}
               getMyIndividualChat={getMyIndividualChat}
             />

@@ -19,11 +19,10 @@ import BoardButton from './BoardInfo/BoardButton';
 import { BoardType } from '@/types/home';
 
 interface BoardInfoType {
-  handleSelectedImg: (e: React.ChangeEvent<HTMLInputElement>) => void;
   setSelected: SetterOrUpdater<BoardType>;
 }
 
-const BoardInfo = ({ handleSelectedImg, setSelected }: BoardInfoType) => {
+const BoardInfo = ({ setSelected }: BoardInfoType) => {
   const context = useContext(boardContext);
 
   const { selected } = context;
@@ -40,7 +39,7 @@ const BoardInfo = ({ handleSelectedImg, setSelected }: BoardInfoType) => {
 
       setSelected((prev) => ({
         ...prev,
-        board_img: file, // file 객체를 상태에 저장
+        board_img: file,
       }));
 
       return () => URL.revokeObjectURL(imageUrl);
