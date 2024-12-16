@@ -1,6 +1,9 @@
 import { createContext, useContext, useEffect, useState } from 'react';
+
+// libraries
 import { io } from 'socket.io-client';
 
+// types
 import { ClientSocketType } from '@/types/socket';
 
 interface ISocketContext {

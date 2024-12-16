@@ -1,7 +1,11 @@
 import { NextApiRequest, NextApiResponse } from 'next';
+
+// libraries
 import { Server as NetServer } from 'http';
 import { Socket } from 'net';
 import { Server as ServerIO } from 'socket.io';
+
+// types
 import { ServerToClientEvents } from '@/types/socket';
 
 export type NextApiResponseServerIO = NextApiResponse & {
@@ -15,7 +19,7 @@ export type NextApiResponseServerIO = NextApiResponse & {
 const ioHandler = async (req: NextApiRequest, res: NextApiResponseServerIO) => {
   if (!res.socket.server.io) {
     const httpServer = res.socket.server as NetServer;
-    console.log('http server: ', httpServer);
+    alert(httpServer);
     const io = new ServerIO(httpServer, {
       path: '/api/socket/io',
       addTrailingSlash: false,
@@ -35,7 +39,7 @@ const ioHandler = async (req: NextApiRequest, res: NextApiResponseServerIO) => {
 
     res.socket.server.io = io;
 
-    console.log('socket io : ', res.socket.server.io);
+    alert(res.socket.server.io);
   }
 
   res.end();
