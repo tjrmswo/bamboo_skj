@@ -19,7 +19,7 @@ export type NextApiResponseServerIO = NextApiResponse & {
 const ioHandler = async (req: NextApiRequest, res: NextApiResponseServerIO) => {
   if (!res.socket.server.io) {
     const httpServer = res.socket.server as NetServer;
-    alert(httpServer);
+    console.log('http server: ', httpServer);
     const io = new ServerIO(httpServer, {
       path: '/api/socket/io',
       addTrailingSlash: false,
@@ -39,7 +39,7 @@ const ioHandler = async (req: NextApiRequest, res: NextApiResponseServerIO) => {
 
     res.socket.server.io = io;
 
-    alert(res.socket.server.io);
+    console.log('socket io : ', res.socket.server.io);
   }
 
   res.end();
