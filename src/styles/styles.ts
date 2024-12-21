@@ -350,7 +350,7 @@ export const Nav = styled.nav`
   margin-top: 1rem;
 
   .navRow {
-    width: 140px;
+    width: 180px;
     display: flex;
     align-items: center;
     justify-content: space-between;
@@ -369,16 +369,46 @@ export const Nav = styled.nav`
   }
 
   select {
-    width: auto;
+    width: 90px;
   }
 
   .sortButton {
     text-align: center;
   }
 
-  @media (max-width: 970px) {
+  @media (min-width: 1000px) and (max-width: 1070px) {
+    select {
+      width: 90px;
+      height: 26px;
+      font-size: 0.8rem;
+    }
+  }
+
+  @media (min-width: 850px) and (max-width: 1000px) {
+    select {
+      width: 80px;
+      height: 24px;
+      font-size: 0.7rem;
+    }
+  }
+
+  @media (max-width: 850px) {
     .navRow {
-      width: 120px;
+      width: 140px;
+      position: relative;
+      right: 0.7rem;
+    }
+
+    select {
+      width: 70px;
+      height: 22px;
+      font-size: 0.7rem;
+    }
+  }
+
+  @media (min-width: 850px) and (max-width: 970px) {
+    .navRow {
+      width: 150px;
     }
   }
 `;
@@ -521,7 +551,7 @@ export const HomeInput = styled.input`
 `;
 
 export const WriteBtn = styled.button`
-  width: 100px;
+  width: 80px;
   height: 30px;
   border-radius: 0.2rem;
   outline: none;
@@ -541,13 +571,19 @@ export const WriteBtn = styled.button`
   }
 
   @media (min-width: 1000px) and (max-width: 1070px) {
-    width: 90px;
+    width: 70px;
     height: 26px;
     font-size: 0.7rem;
   }
 
-  @media (max-width: 1000px) {
-    width: 80px;
+  @media (min-width: 850px) and (max-width: 1000px) {
+    width: 60px;
+    height: 24px;
+    font-size: 0.7rem;
+  }
+
+  @media (max-width: 850px) {
+    width: 50px;
     height: 24px;
     font-size: 0.7rem;
   }
