@@ -1,43 +1,44 @@
-import { NextApiRequest, NextApiResponse } from 'next';
 
-// libraries
-import { Server as NetServer } from 'http';
-import { Socket } from 'net';
-import { Server as ServerIO } from 'socket.io';
+// import { NextApiRequest, NextApiResponse } from 'next';
 
-// types
-import { ServerToClientEvents } from '@/types/socket';
+// // libraries
+// import { Server as NetServer } from 'http';
+// import { Socket } from 'net';
+// import { Server as ServerIO } from 'socket.io';
 
-export type NextApiResponseServerIO = NextApiResponse & {
-  socket: Socket & {
-    server: NetServer & {
-      io: ServerIO<ServerToClientEvents>;
-    };
-  };
-};
+// // types
+// import { ServerToClientEvents } from '@/types/socket';
 
-const ioHandler = async (req: NextApiRequest, res: NextApiResponseServerIO) => {
-  if (!res.socket.server.io) {
-    const httpServer = res.socket.server as NetServer;
-    const io = new ServerIO(httpServer, {
-      path: '/api/socket/io',
-      addTrailingSlash: false,
-    });
+// export type NextApiResponseServerIO = NextApiResponse & {
+//   socket: Socket & {
+//     server: NetServer & {
+//       io: ServerIO<ServerToClientEvents>;
+//     };
+//   };
+// };
 
-    io.on('connection', (socket) => {
-      socket.on('sendMessage', (message) => {
-        socket.broadcast.emit('message', message);
-      });
+// const ioHandler = async (req: NextApiRequest, res: NextApiResponseServerIO) => {
+//   if (!res.socket.server.io) {
+//     const httpServer = res.socket.server as NetServer;
+//     const io = new ServerIO(httpServer, {
+//       path: '/api/socket/io',
+//       addTrailingSlash: false,
+//     });
 
-      socket.on('disconnect', () => {
-        console.log('Socket disconnected:', socket.id);
-      });
-    });
+//     io.on('connection', (socket) => {
+//       socket.on('sendMessage', (message) => {
+//         socket.broadcast.emit('message', message);
+//       });
 
-    res.socket.server.io = io;
-  }
+//       socket.on('disconnect', () => {
+//         console.log('Socket disconnected:', socket.id);
+//       });
+//     });
 
-  res.end();
-};
+//     res.socket.server.io = io;
+//   }
 
-export default ioHandler;
+//   res.end();
+// };
+
+// export default ioHandler;
