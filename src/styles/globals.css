@@ -1,4 +1,4 @@
-@font-face {
+/* @font-face {
   font-family: 'GmarketSansBold';
   font-style: normal;
   src: url('/fonts/GmarketSansTTFBold.ttf');
@@ -12,7 +12,7 @@
   font-family: 'GmarketSansMedium';
   font-style: normal;
   src: url('/fonts/GmarketSansTTFMedium.ttf');
-}
+} */
 @font-face {
   font-family: 'RobotoBlack';
   src: url('/fonts/Roboto-Black.ttf');

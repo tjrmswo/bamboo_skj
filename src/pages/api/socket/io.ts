@@ -19,15 +19,12 @@ export type NextApiResponseServerIO = NextApiResponse & {
 const ioHandler = async (req: NextApiRequest, res: NextApiResponseServerIO) => {
   if (!res.socket.server.io) {
     const httpServer = res.socket.server as NetServer;
-    console.log('http server: ', httpServer);
     const io = new ServerIO(httpServer, {
       path: '/api/socket/io',
       addTrailingSlash: false,
     });
 
     io.on('connection', (socket) => {
-      // console.log('New socket connected:', socket.id);
-
       socket.on('sendMessage', (message) => {
         socket.broadcast.emit('message', message);
       });
@@ -38,8 +35,6 @@ const ioHandler = async (req: NextApiRequest, res: NextApiResponseServerIO) => {
     });
 
     res.socket.server.io = io;
-
-    console.log('socket io : ', res.socket.server.io);
   }
 
   res.end();

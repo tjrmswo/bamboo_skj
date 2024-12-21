@@ -1,5 +1,6 @@
 import { pagingType } from '@/types/home';
 import basicClient from './basicClient';
+import chatClient from './chatClient';
 
 export const AllData = () => {
   return basicClient.get('/board');
@@ -38,14 +39,14 @@ export const getSpecificBoard = (id: number) => {
 };
 
 export const getAllChattingData = () => {
-  return basicClient.get('/chat');
+  return chatClient.get('/api/chat');
 };
 
 export const postChatMessage = (body: {
   chat_content: string;
   chat_user_id: number;
 }) => {
-  return basicClient.post('/chat', body);
+  return chatClient.post('/api/chat', body);
 };
 
 export const getInfiniteData = ({ offset, limit }: pagingType) => {
@@ -63,9 +64,7 @@ export const addFriends = (body: {
 
 // 내 채팅 가져오기
 export const getMyChat = (chat_user_id: number) => {
-  return basicClient.get(`/chat/chatting`, {
-    params: { chat_user_id },
-  });
+  return chatClient.get(`/api/chat/${chat_user_id}`);
 };
 
 // 내가 받은 친구 요청 가져오기
