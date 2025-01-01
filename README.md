@@ -61,10 +61,10 @@
 
 ### DevOps
 
-|                                                              AWS RDS                                                              |                                                              Vercel                                                               |
-| :-------------------------------------------------------------------------------------------------------------------------------: | :-------------------------------------------------------------------------------------------------------------------------------: |
-| <img alt="NextJS" src="https://github.com/user-attachments/assets/ce4bffd7-a290-4b34-b595-2884bfecb19e" width="65" height="65" /> | <img src="https://github.com/user-attachments/assets/472131d0-104e-4ed2-8b80-5382d9efbe64" alt="Vercel" width="65" height="65" /> |
+|                                                              AWS RDS                                                              |                                                              Vercel                                                               | EC2 |
+| :-------------------------------------------------------------------------------------------------------------------------------: | :-------------------------------------------------------------------------------------------------------------------------------: | :-------------------------------------------------------------------------------------------------------------------------------: |
+| <img alt="NextJS" src="https://github.com/user-attachments/assets/ce4bffd7-a290-4b34-b595-2884bfecb19e" width="65" height="65" /> | <img src="https://github.com/user-attachments/assets/472131d0-104e-4ed2-8b80-5382d9efbe64" alt="Vercel" width="65" height="65" /> | <img src="https://github.com/user-attachments/assets/c277a0b6-54bc-406b-83c8-2d0e0d3a3efb" alt="EC2" width="65" height="65" />  |
 
 ## 💡 System Architecture
 
-![시스템 아키텍처](https://github.com/user-attachments/assets/a58ccdee-c87f-4d4e-9b61-3575be51e1aa)
+![image](https://github.com/user-attachments/assets/a7b46f02-6a32-47fc-ad65-3d0730b599e2)
