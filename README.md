@@ -61,10 +61,9 @@
 
 ### DevOps
 
-|                                                              AWS RDS                                                              |                                                              Vercel                                                               | EC2 |
-| :-------------------------------------------------------------------------------------------------------------------------------: | :-------------------------------------------------------------------------------------------------------------------------------: | :-------------------------------------------------------------------------------------------------------------------------------: |
-| <img alt="NextJS" src="https://github.com/user-attachments/assets/ce4bffd7-a290-4b34-b595-2884bfecb19e" width="65" height="65" /> | <img src="https://github.com/user-attachments/assets/472131d0-104e-4ed2-8b80-5382d9efbe64" alt="Vercel" width="65" height="65" /> | <img src="https://github.com/user-attachments/assets/c277a0b6-54bc-406b-83c8-2d0e0d3a3efb" alt="EC2" width="65" height="65" />  |
+|                                                              AWS RDS                                                              |                                                              Vercel                                                               | EC2 | NGINX
+| :-------------------------------------------------------------------------------------------------------------------------------: | :-------------------------------------------------------------------------------------------------------------------------------: | :-------------------------------------------------------------------------------------------------------------------------------: | :-------------------------------------------------------------------------------------------------------------------------------: |
+| <img alt="NextJS" src="https://github.com/user-attachments/assets/ce4bffd7-a290-4b34-b595-2884bfecb19e" width="65" height="65" /> | <img src="https://github.com/user-attachments/assets/472131d0-104e-4ed2-8b80-5382d9efbe64" alt="Vercel" width="65" height="65" /> | <img src="https://github.com/user-attachments/assets/c277a0b6-54bc-406b-83c8-2d0e0d3a3efb" alt="EC2" width="65" height="65" />  | <img src="https://github.com/user-attachments/assets/c3b7af06-43b0-4837-b7cb-569f78c28a49" alt="NGINX" width="65" height="65" />
 
 ## 💡 System Architecture
-
-![image](https://github.com/user-attachments/assets/a7b46f02-6a32-47fc-ad65-3d0730b599e2)
+![image](https://github.com/user-attachments/assets/65ee5955-eda0-491f-bfed-8d0e7532f8bb)
