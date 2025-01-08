@@ -436,13 +436,13 @@ const Home = () => {
             openModalBoard={openModalBoard}
           />
         </navContext.Provider>
-        <MainContent
+        {/* <MainContent
           data={infiniteBoardData}
           getSelectedData={getSelectedData}
           boardDelete={boardDelete}
           getPagingBoard={getPagingBoard}
           width={width}
-        />
+        /> */}
         {isOpened && (
           <Modal width={50} height={75} openModal={openModal} modal={isOpened}>
             <boardContext.Provider
