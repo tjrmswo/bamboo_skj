@@ -20,7 +20,7 @@ import { selectedPost } from '@/atom/state';
 import Modal from '@/components/common/Modal';
 import Header from '@/components/home/Header';
 import NavBar from '@/components/home/NavBar';
-// import MainContent from '@/components/home/MainContent';
+import MainContent from '@/components/home/MainContent';
 import BoardInfo from '@/components/home/BoardInfo';
 import ChatModal from '@/components/home/ChattModal';
 import Chat from '@/components/home/ChatModal/Chat';
@@ -294,11 +294,11 @@ const Home = () => {
     setBoardModify(false);
   }
 
-  // // 게시글 선택
-  // function getSelectedData(data: BoardType) {
-  //   setSelected(data);
-  //   setIsOpened(true);
-  // }
+  // 게시글 선택
+  function getSelectedData(data: BoardType) {
+    setSelected(data);
+    setIsOpened(true);
+  }
 
   // 게시글 모달열기
   function openModal() {
@@ -323,10 +323,10 @@ const Home = () => {
   }
 
   // 게시글 삭제 함수
-  // function boardDelete(id: number) {
-  //   deleteBoards(id);
-  //   setDeleteBoardId(id);
-  // }
+  function boardDelete(id: number) {
+    deleteBoards(id);
+    setDeleteBoardId(id);
+  }
 
   function sortingBoards(value: string) {
     let sorting;
