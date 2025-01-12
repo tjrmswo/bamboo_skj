@@ -55,16 +55,21 @@
 
 ### Backend
 
-|                                                          JsonWebToken                                                          |                                                              Next.js Api Route                                                               |
-| :----------------------------------------------------------------------------------------------------------------------------: | :------------------------------------------------------------------------------------------------------------------------------------------: |
-| <img src="https://github.com/user-attachments/assets/3287e94f-0acb-4eed-8c4e-d3d304549ae9" alt="MSW" width="60" height="60" /> | <img src="https://github.com/user-attachments/assets/15aeb411-7141-400f-8575-b83d4d79fcb5" alt="Next.jsapi route" width="150" height="80" /> |
+|JsonWebToken|Next.js Api Route| Express.js |
+| :----: | :----: |:----:|
+| <img src="https://github.com/user-attachments/assets/3287e94f-0acb-4eed-8c4e-d3d304549ae9" alt="MSW" width="60" height="60" /> | <img src="https://github.com/user-attachments/assets/15aeb411-7141-400f-8575-b83d4d79fcb5" alt="Next.jsapi route" width="150" height="80" /> | <img src="https://github.com/user-attachments/assets/626f1a73-1458-4928-9e83-4ef323f46cee" alt="Next.jsapi route" width="150" height="80" /> |
+
 
 ### DevOps
 
-|                                                              AWS RDS                                                              |                                                              Vercel                                                               |
-| :-------------------------------------------------------------------------------------------------------------------------------: | :-------------------------------------------------------------------------------------------------------------------------------: |
-| <img alt="NextJS" src="https://github.com/user-attachments/assets/ce4bffd7-a290-4b34-b595-2884bfecb19e" width="65" height="65" /> | <img src="https://github.com/user-attachments/assets/472131d0-104e-4ed2-8b80-5382d9efbe64" alt="Vercel" width="65" height="65" /> |
+|AWS EC2| AWS LightSail | Route 53 |  NGINX |
+| :----: | :----: | :----: | :----: |
+| <img alt="EC2" src="https://github.com/user-attachments/assets/009af56c-3409-4a39-b9d8-f17ae3866620" width="65" height="65" /> | <img src="https://github.com/user-attachments/assets/b5c9d713-916b-4f93-a25c-2bb090f641d8" alt="AWS LightSail" width="65" height="65" /> |  <img src="https://github.com/user-attachments/assets/b4608021-a772-489d-a386-acb825b41122" alt="Route 53" width="65" height="65" /> | <img src="https://github.com/user-attachments/assets/6f2b5b90-7db0-4f4f-8804-8a8db61c6cb2" alt="NGINX" width="65" height="65" /> |
+
+![image])
+
 
 ## 💡 System Architecture
 
-![시스템 아키텍처](https://github.com/user-attachments/assets/a58ccdee-c87f-4d4e-9b61-3575be51e1aa)
+![시스템 아키텍처](https://github.com/user-attachments/assets/2097003f-5556-42c9-8a82-202a8891ab59)
+
