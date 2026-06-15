@@ -1,6 +1,9 @@
 # 🎋대학교 대나무숲
 
-프로젝트 한줄 설명: 대학교 커뮤니티를 만들어 학생들끼리의 커뮤니케이션을 활성화
+Socket.io 기반 실시간 채팅과 Jest 단위 테스트를 적용한 대학교 커뮤니티 서비스
+1인 개발 · 현직 개발자 멘토링 활동(FrontLine) 참여 중 진행한 개인 프로젝트
+
+대학교 학생들이 익명으로 소통하고, 게시글·친구·실시간 채팅으로 커뮤니케이션할 수 있는 커뮤니티 서비스입니다.
 
 ## 💻 UI
 
@@ -29,10 +32,26 @@
 
 ### 채팅 기능
 
-- 실시간 채팅 기능
+- Socket.io 기반 1:1 실시간 채팅
+- 친구 목록에서 채팅방 진입, 실시간 메시지 송수신
 
 ### 친구 기능
-- 친구 요청, 친구 수락 기능
+- 친구 요청 / 수락
+- 전체 유저 리스트, 받은 친구 요청 관리
+
+🚀 시작하기
+
+```bash
+# 의존성 설치
+pnpm install
+
+# 목 API 서버 실행 (포트 3001)
+json-server --watch db.json --port 3001
+
+# 개발 서버 실행
+pnpm dev
+```
+
 
 ## 🌍 개발 환경
 
@@ -72,4 +91,46 @@
 ## 💡 System Architecture
 
 ![시스템 아키텍처](https://github.com/user-attachments/assets/2097003f-5556-42c9-8a82-202a8891ab59)
+
+
+## 🔧 트러블슈팅
+
+### 1. 한글 입력 시 채팅 메시지가 두 번 전송되는 문제
+
+채팅 입력창에서 Enter로 메시지를 보낼 때, 한글 입력에서만 동일 메시지가 두 번 전송되는 현상이 발생했다.
+
+처음에는 `handleKeyDown` 로직을 JSX 인라인에서 별도 함수로 분리하면 해결되는 것처럼 보였으나, 실제로는 재현되어 근본 원인이 아님을 확인했다.
+
+원인은 한글의 **조합형 입력(IME)** 특성이었다. 한글은 조합 과정에서 `keydown` 이벤트가 추가로 트리거되어, 조합이 끝나기 전에 전송 로직이 한 번 더 실행되고 있었다. `compositionstart` / `compositionend` 이벤트로 조합 상태(`isComposing`)를 추적하고, 조합 중이 아닐 때만 전송되도록 수정해 해결했다.
+
+```tsx
+const [isComposing, setIsComposing] = useState(false);
+
+const handleKeyDown = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
+  if (e.key === 'Enter' && !e.shiftKey && !isComposing) {
+    e.preventDefault();
+    sendMessages();
+  }
+};
+// onCompositionStart / onCompositionEnd 로 isComposing 갱신
+```
+
+> "함수 분리로 해결된 듯 보였지만 재현됐고, 결국 IME 조합 이벤트가 진짜 원인이었다"는 점에서, 증상이 아니라 원인을 추적하는 과정을 경험했다.
+
+### 2. EC2 배포 중 빌드 실패 및 소켓 연결 문제
+
+배포 환경(EC2)에서 `pnpm build`가 중단되는 문제가 있었다. t2.micro의 제한된 메모리·CPU가 번들링/최적화 같은 자원 집약적 빌드 작업을 감당하지 못한 것이 원인으로, **t2.medium(2 vCPU / 4GiB)** 으로 변경해 해결했다.
+
+이후 배포 환경에서 소켓이 연결되지 않는 문제는, 채팅 서버의 **CORS 설정**과 프론트엔드 **HTTPS(EC2 + NGINX)** 적용으로 해결했다. Socket.io 서버에 `path`를 명시하고 허용 origin을 환경변수로 분리했다.
+
+```ts
+const io = new Server(server, {
+  path: '/api/socket/io',
+  cors: {
+    origin: [process.env.DEPLOY_ADDRESS, process.env.BE_DEPLOY_ADDRESS],
+    methods: ['GET', 'POST'],
+    credentials: true,
+  },
+});
+```
 
